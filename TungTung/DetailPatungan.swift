@@ -54,7 +54,7 @@ struct DetailPatungan: View {
                         Text("Sisa Rp\(totalAmount - paidAmount)")
                             .font(.title)
                             .fontWeight(.semibold)
-                            .foregroundColor(Color("Orange"))
+                            .foregroundColor(Color("PrimaryColor"))
                         
                         Text("Dari Rp\(totalAmount)")
                             .font(.subheadline)
@@ -63,7 +63,7 @@ struct DetailPatungan: View {
                         ProgressView(value: Double(paidAmount), total: Double(totalAmount))
                             .progressViewStyle(LinearProgressViewStyle())
                             .frame(height: 8)
-                            .accentColor(Color("Orange"))
+                            .accentColor(Color("PrimaryColor"))
                             .cornerRadius(5)
                             .padding(.top)
                     }
@@ -87,7 +87,7 @@ struct DetailPatungan: View {
                                 Image(systemName: selectedMembers[name] ?? false ? "checkmark.square.fill" : "square")
                                     .resizable()
                                     .frame(width: 20, height: 20)
-                                    .foregroundColor(selectedMembers[name] ?? false ? Color("Orange") : .gray)
+                                    .foregroundColor(selectedMembers[name] ?? false ? Color("PrimaryColor") : .gray)
                             }
                             .buttonStyle(PlainButtonStyle())
                         }
@@ -125,7 +125,7 @@ struct DetailPatungan: View {
                         .fontWeight(.semibold)
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(Color("Orange"))
+                        .background(Color("PrimaryColor"))
                         .foregroundStyle(.black)
                         .cornerRadius(8)
                 }
@@ -139,7 +139,7 @@ struct DetailPatungan: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {}) {
                         Image(systemName: "chevron.left")
-                            .foregroundColor(Color("Orange"))
+                            .foregroundColor(Color("PrimaryColor"))
                     }
                 }
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -150,7 +150,7 @@ struct DetailPatungan: View {
                         print("Copied to clipboard: \n\(detailText)")
                     }) {
                         Image(systemName: "document.on.document")
-                            .foregroundColor(Color("Orange"))
+                            .foregroundColor(Color("PrimaryColor"))
                     }
                     Button(action: { }) {
                         Image(systemName: "trash")
@@ -169,7 +169,7 @@ struct DetailPatungan: View {
                 Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
                     .resizable()
                     .frame(width: 24, height: 24)
-                    .foregroundColor(configuration.isOn ? Color("Orange") : .tintedOrange)
+                    .foregroundColor(configuration.isOn ? Color("PrimaryColor") : .tintedOrange)
             }
         }
     }
@@ -200,7 +200,7 @@ struct DetailPatungan: View {
                 Image(systemName: "creditcard.fill")
                     .resizable()
                     .frame(width: 30, height: 20)
-                    .foregroundColor(Color("Orange"))
+                    .foregroundColor(Color("PrimaryColor"))
             }
             .padding()
             .frame(maxWidth: .infinity)

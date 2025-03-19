@@ -15,7 +15,7 @@ struct Cards: View {
         formatter.numberStyle = .decimal
         formatter.groupingSeparator = "."
         formatter.usesGroupingSeparator = true
-        return formatter.string(from: NSNumber(value: patunganDetails.amount)) ?? "0"
+        return formatter.string(from: NSNumber(value: (patunganDetails.amount/patunganDetails.members.count)*patunganDetails.paidParticipants)) ?? "0"
     }
 
     var body: some View {
@@ -26,17 +26,21 @@ struct Cards: View {
             Text("Sisa \(patunganDetails.members.count - Int(patunganDetails.paidParticipants)) orang")
                 .font(.footnote)
                 .foregroundColor(.gray)
-                .padding(.bottom, 20)
 
             HStack {
                 Spacer()
                 Text("Rp\(formattedAmount)")
-                    .font(.largeTitle)
+                    .font(.title)
                     .fontWeight(.semibold)
+                    .foregroundStyle(Color("PrimaryColor"))
             }
 
             ProgressView(value: Double(patunganDetails.paidParticipants) / Double(patunganDetails.members.count))
-                .tint(.black)
+                .progressViewStyle(LinearProgressViewStyle())
+                .frame(height: 8)
+                .accentColor(Color("PrimaryColor"))
+                .cornerRadius(5)
+                .padding(.bottom)
         }
     }
 }

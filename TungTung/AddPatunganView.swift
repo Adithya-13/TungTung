@@ -31,14 +31,8 @@ struct AddPatunganView: View {
     @State private var showAddPaymentSheet = false
     @State private var memberAmount: Double = 0.0
     
-    func saveToStorage() {
-        if let encoded = try? JSONEncoder().encode(patungans) {
-            UserDefaults.standard.set(encoded, forKey: "savedPatungans")
-        }
-    }
     
-    
-    func calculateMemberAmount(amount: Int, members: inout [Member]) {
+    private func calculateMemberAmount(amount: Int, members: inout [Member]) {
         guard amount > 0 else {
             for index in members.indices {
                 members[index].amount = 0.0
@@ -55,11 +49,11 @@ struct AddPatunganView: View {
         }
     }
     
-    func deleteMember(at offsets: IndexSet) {
+    private func deleteMember(at offsets: IndexSet) {
         members.remove(atOffsets: offsets)
     }
     
-    func deletePaymentOption(at offsets: IndexSet) {
+    private func deletePaymentOption(at offsets: IndexSet) {
         paymentOptions.remove(atOffsets: offsets)
     }
     
@@ -163,11 +157,13 @@ struct AddPatunganView: View {
                 Button {
                     let newPatungan = Patungan(
                         title: title,
+                        amount: amount,
                         members: members,
                         paymentOptions: paymentOptions,
-                        amount: amount)
+                        agreement: agreementRule
+                        )
                     patungans.append(newPatungan)
-                    saveToStorage()
+                    saveToStorage(patungans: patungans)
                     
                     dismiss()
                 } label: {
@@ -261,4 +257,3 @@ struct AddPaymentSheet: View {
         .padding()
     }
 }
-

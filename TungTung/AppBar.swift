@@ -13,18 +13,19 @@ struct AppBar: View{
     
     var body: some View{
         HStack {
-                    Text(title)
-                        .font(.largeTitle)
-                        .padding(.leading)
-                    Spacer()
+            Text(title)
+                .font(.largeTitle).fontWeight(.bold)
+                .padding(.leading)
+                .foregroundStyle(Color("PrimaryColor"))
+            Spacer()
             NavigationLink(destination: AddPatunganView(patungans: $patungans)){
                 Image(systemName: "plus")
-                    .padding(.trailing)
-                    .foregroundColor(.black)
+                    .padding(.trailing, 20)
+                    .foregroundStyle(Color("PrimaryColor"))
                     .font(.title)
             }
-                }
-                .frame(height: 50)
-                .background(Color.white)
+        }
+        .padding(.bottom)
+        .frame(height: .infinity)
     }
 }

@@ -6,18 +6,30 @@
 //
 
 import SwiftUI
+import Lottie
 
 struct Patungan: Codable{
     var id: UUID = UUID()
-    var title: String
+    var title: String = ""
+    var amount: Int
     var members: [Member]
     var paymentOptions: [PaymentOption]
-    var paidParticipants = 0
-    var amount: Int
+    var agreement: String = ""
+    var paidParticipants: Int = 0
+}
+
+func saveToStorage(patungans: [Patungan]) {
+    if let encoded = try? JSONEncoder().encode(patungans) {
+        UserDefaults.standard.set(encoded, forKey: "savedPatungans")
+    }
 }
 
 struct ContentView: View {
+    
     @State private var patungans: [Patungan] = []
+    
+    private var animation: String = "frankensteinAnm.json"
+    
     func loadFromStorage() {
         if let savedData = UserDefaults.standard.data(forKey: "savedPatungans"),
             let decoded = try? JSONDecoder().decode([Patungan].self, from: savedData) {
@@ -25,22 +37,22 @@ struct ContentView: View {
         }
     }
     
-    func saveToStorage() {
-        if let encoded = try? JSONEncoder().encode(patungans) {
-            UserDefaults.standard.set(encoded, forKey: "savedPatungans")
-        }
+    private func deletePatungan(at offsets: IndexSet) {
+        patungans.remove(atOffsets: offsets)
+        saveToStorage(patungans: patungans)
     }
     
-    func deletePatungan(at offsets: IndexSet) {
-        patungans.remove(atOffsets: offsets)
-        saveToStorage()
-    }
-
     var body: some View {
         NavigationStack {
+            AppBar(patungans: $patungans, title: "TungTung!")
             VStack {
                 if patungans.isEmpty {
                     VStack {
+                        LottieView(animation: .named(animation))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                            .frame(width: 350, height: 350)
+                            .scaledToFit()
                         Text("Belum ada patungan")
                             .font(.footnote)
                             .padding(.bottom)
@@ -50,7 +62,7 @@ struct ContentView: View {
                                 .foregroundStyle(Color.white)
                                 .padding()
                                 .frame(width: 250, height: 50)
-                                .background(Color("HueOrange"))
+                                .background(Color("PrimaryColor"))
                                 .cornerRadius(15)
                                 .shadow(color: Color.black.opacity(0.2), radius: 5, x:0, y:5)
                         }
@@ -65,16 +77,16 @@ struct ContentView: View {
                     }
                     NavigationLink(destination: AddPatunganView(patungans: $patungans)){
                         Image(systemName: "plus")
+                            .font(.title)
                             .frame(maxWidth: .infinity)
                             .padding(.top)
                             .foregroundStyle(Color("TintedOrange"))
-                            .background(Color("ShadedOrange"))
+                            .background(Color("PrimaryColor"))
                     }
                 }
                 
             }
             .onAppear(perform: loadFromStorage)
-            .navigationTitle(Text("TungTung!"))
         }
     }
 }
