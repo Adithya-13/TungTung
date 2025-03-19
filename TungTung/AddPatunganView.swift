@@ -1,8 +1,23 @@
 import SwiftUI
 
+struct Member: Codable {
+    var name: String
+    var amount: Double
+}
+
+struct PaymentOption: Codable {
+    var accountNumber: String
+    var bankName: String
+    var owner: String
+}
+
 struct AddPatunganView: View {
+    @Environment(\.dismiss) var dismiss
+    @Binding var patungans: [Patungan]
+    
     @State private var title = ""
     @State private var price: String = ""
+    @State private var amount: Int = 0
     @State private var members: [Member] = []
     @State private var paymentOptions: [PaymentOption] = []
     @State private var agreementRule = ""
@@ -15,9 +30,41 @@ struct AddPatunganView: View {
     @State private var showAddMemberSheet = false
     @State private var showAddPaymentSheet = false
     @State private var memberAmount: Double = 0.0
+    
+    func saveToStorage() {
+        if let encoded = try? JSONEncoder().encode(patungans) {
+            UserDefaults.standard.set(encoded, forKey: "savedPatungans")
+        }
+    }
+        
+        
+    func calculateMemberAmount(amount: Int, members: inout [Member]) {
+        guard amount > 0 else {
+            for index in members.indices {
+                members[index].amount = 0.0
+            }
+            return
+        }
+
+        let numberOfMembers = Double(members.count)
+        if numberOfMembers > 0 {
+            let memberAmount = Double(amount) / numberOfMembers
+            for index in members.indices {
+                members[index].amount = memberAmount
+            }
+        }
+    }
+        
+    func deleteMember(at offsets: IndexSet) {
+        members.remove(atOffsets: offsets)
+    }
+        
+    func deletePaymentOption(at offsets: IndexSet) {
+            paymentOptions.remove(atOffsets: offsets)
+    }
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
                 Section(header: Text("Judul Patungan")) {
                     TextField("Contoh: Nobar Interstellar", text: $title)
@@ -31,7 +78,12 @@ struct AddPatunganView: View {
                         TextField("500.000", text: $price)
                             .keyboardType(.numberPad)
                             .onChange(of: price) { newValue in
-                                calculateMemberAmount()
+                                let filtered = newValue.filter { "0123456789".contains($0) }
+                                if filtered != newValue {
+                                    price = filtered // Remove invalid characters
+                                }
+                                amount = Int(price) ?? 0
+                                calculateMemberAmount(amount: amount, members: &members)
                             }
                             .background(Color.clear)
                             .cornerRadius(8)
@@ -53,15 +105,13 @@ struct AddPatunganView: View {
                     .sheet(isPresented: $showAddMemberSheet) {
                         AddMemberSheet(newMemberName: $newMemberName, onSave: {
                             if !newMemberName.isEmpty {
-                                // Add new member to the list
                                 members.append(Member(name: newMemberName, amount: memberAmount))
-                                newMemberName = "" // Clear the input field
-                                calculateMemberAmount() // Recalculate amount per person
+                                newMemberName = "" // ✅ Clear input field
+                                calculateMemberAmount(amount: amount, members: &members)
                                 showAddMemberSheet.toggle()
                             }
                         }, onCancel: {
-                            // Reset the new member name when canceled
-                            newMemberName = ""
+                            newMemberName = "" // ✅ Also clear on cancel
                             showAddMemberSheet.toggle()
                         })
                     }
@@ -109,7 +159,16 @@ struct AddPatunganView: View {
                 }
                 
                 Button("Simpan") {
-
+                    let newPatungan = Patungan(
+                        title: title,
+                        members: members,
+                        paymentOptions: paymentOptions,
+                        amount: amount)
+                    patungans.append(newPatungan)
+                    saveToStorage()
+                    
+                    dismiss()
+                };
                 }
                 
                 
@@ -118,46 +177,7 @@ struct AddPatunganView: View {
             .navigationBarBackButtonHidden(false)
         }
     }
-    
-    
-    func calculateMemberAmount() {
-        guard let totalPrice = Double(price), totalPrice > 0 else {
-            memberAmount = 0.0
-            for index in members.indices {
-                members[index].amount = 0.0
-            }
-            return
-        }
-        
-        let numberOfMembers = Double(members.count)
-        if numberOfMembers > 0 {
-            memberAmount = totalPrice / numberOfMembers
-            // Update amount for each member
-            for index in members.indices {
-                members[index].amount = memberAmount
-            }
-        }
-    }
-    
-    func deleteMember(at offsets: IndexSet) {
-        members.remove(atOffsets: offsets)
-    }
-    
-    func deletePaymentOption(at offsets: IndexSet) {
-        paymentOptions.remove(atOffsets: offsets)
-    }
-}
 
-struct Member {
-    var name: String
-    var amount: Double
-}
-
-struct PaymentOption {
-    var accountNumber: String
-    var bankName: String
-    var owner: String
-}
 
 struct AddMemberSheet: View {
     @Binding var newMemberName: String
@@ -230,8 +250,3 @@ struct AddPaymentSheet: View {
     }
 }
 
-struct AddPatunganView_Previews: PreviewProvider {
-    static var previews: some View {
-        AddPatunganView()
-    }
-}
