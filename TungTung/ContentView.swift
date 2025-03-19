@@ -71,6 +71,7 @@ struct ContentView: View {
                             .background(Color("ShadedOrange"))
                     }
                 }
+                
             }
             .onAppear(perform: loadFromStorage)
             .navigationTitle(Text("TungTung!"))
