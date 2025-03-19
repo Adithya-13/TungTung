@@ -45,7 +45,11 @@ struct ContentView: View {
                     ScrollView{
                         VStack(spacing: 15){
                             ForEach(patungans, id: \.id){patunganDetails in
-                                Cards(patunganDetails: patunganDetails)
+                                NavigationView {
+                                    NavigationLink(destination: DetailPatungan()) {
+                                        Cards(patunganDetails:patunganDetails)
+                                    }
+                                }
                             }
                         }
                     }
