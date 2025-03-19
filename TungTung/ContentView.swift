@@ -15,8 +15,14 @@ struct Patungan: Codable{
     var members: [Member]
     var paymentOptions: [PaymentOption]
     var agreement: String = ""
-    var paidParticipants: Int = 0
+    var accumulatedAmount: Double {
+        members.filter(\.isPaid).map { Double($0.amount) }.reduce(0, +)
+    }
+    var paidParticipants: Int {
+        members.filter { $0.isPaid }.count
+    }
 }
+
 
 func saveToStorage(patungans: [Patungan]) {
     if let encoded = try? JSONEncoder().encode(patungans) {
@@ -30,16 +36,22 @@ struct ContentView: View {
     
     private var animation: String = "frankensteinAnm.json"
     
-    func loadFromStorage() {
+    /*
+    func deleteAllPatungans() {
+        patungans.removeAll()
+        UserDefaults.standard.removeObject(forKey: "savedPatungans")
+    }*/
+    
+    private func deletePatungan(id: UUID) {
+        patungans.removeAll { $0.id == id } // Remove by ID
+        saveToStorage(patungans: patungans)
+    }
+    
+    private func loadFromStorage() {
         if let savedData = UserDefaults.standard.data(forKey: "savedPatungans"),
             let decoded = try? JSONDecoder().decode([Patungan].self, from: savedData) {
             patungans = decoded
         }
-    }
-    
-    private func deletePatungan(at offsets: IndexSet) {
-        patungans.remove(atOffsets: offsets)
-        saveToStorage(patungans: patungans)
     }
     
     var body: some View {
@@ -59,6 +71,7 @@ struct ContentView: View {
                         
                         NavigationLink(destination: AddPatunganView(patungans: $patungans)){
                             Label("Tambahkan Patungan", systemImage: "plus")
+                                .font(.subheadline)
                                 .foregroundStyle(Color.white)
                                 .padding()
                                 .frame(width: 250, height: 50)
@@ -70,10 +83,9 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     List {
-                        ForEach(patungans, id: \.id) { patunganDetails in
-                            Cards(patunganDetails: patunganDetails)
+                        ForEach($patungans, id: \.id) { patunganDetails in
+                            Cards(patunganDetails: patunganDetails, updatePatungan: {saveToStorage(patungans: patungans)}, requestDelete: deletePatungan)
                         }
-                        .onDelete(perform: deletePatungan)
                     }
                     NavigationLink(destination: AddPatunganView(patungans: $patungans)){
                         Image(systemName: "plus")

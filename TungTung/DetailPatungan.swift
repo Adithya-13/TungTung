@@ -1,30 +1,19 @@
 import SwiftUI
 
 struct DetailPatungan: View {
+    @Environment(\.presentationMode) var presentationMode
+    @Binding var patunganDetails: Patungan
+    var onUpdate: () -> Void
+    var deleteThisPatungan: (UUID) -> Void
     
-    @State private var selectedMembers: [String: Bool] = [
-        "Adit": false,
-        "Kiki": false,
-        "Zaidan": false,
-        "Jose": false,
-        "Syatria": false
-    ]
-    
-    let totalAmount = 500000
-    let perPersonAmount = 100000
-    
-    var paidAmount: Int {
-        selectedMembers.filter { $0.value }.count * perPersonAmount
+    private var remaining: Double {
+        let amount = patunganDetails.amount
+        let accumulatedAmount = patunganDetails.accumulatedAmount
+        return Double(amount) - accumulatedAmount
     }
     
+    /*
     func generatePatunganDetail() -> String {
-        let title = "📌 Detail Patungan: Nobar Interstellar\n"
-        let total = "💰 Total: Rp\(totalAmount)\n"
-        let remaining = "🔻 Sisa: Rp\(totalAmount - paidAmount)\n"
-        
-        let contributors = selectedMembers.map { name, hasPaid in
-            return hasPaid ? "✅ \(name) - Rp\(perPersonAmount)" : "❌ \(name) - Belum bayar"
-        }.joined(separator: "\n")
         
         let paymentOptions = """
         🏦 Opsi Pembayaran:
@@ -39,55 +28,59 @@ struct DetailPatungan: View {
         - Max tanggal 29 Maret
         """
         
-        return "\(title)\n\(total)\(remaining)\n👥 Kontribusi Anggota:\n\(contributors)\n\n\(paymentOptions)\n\n\(rules)"
-    }
+        return "\(patunganDetails.title)\n\(patunganDetails.amount)\(remaining)\n👥 Kontribusi Anggota:\n\(patunganDetails.members)\n\n\(paymentOptions)\n\n\(rules)"
+    }*/
 
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 Section {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Nobar Interstellar")
+                        Text(patunganDetails.title)
                             .font(.headline)
                             .fontWeight(.semibold)
-                        Text("Sisa Rp\(totalAmount - paidAmount)")
+                        Text("Sisa Rp\(Double(patunganDetails.amount) - patunganDetails.accumulatedAmount, specifier: "%.2f")")
                             .font(.title)
                             .fontWeight(.semibold)
                             .foregroundColor(Color("PrimaryColor"))
                         
-                        Text("Dari Rp\(totalAmount)")
+                        Text("Dari Rp\(patunganDetails.amount)")
                             .font(.subheadline)
                             .foregroundColor(.gray)
                         
-                        ProgressView(value: Double(paidAmount), total: Double(totalAmount))
-                            .progressViewStyle(LinearProgressViewStyle())
-                            .frame(height: 8)
-                            .accentColor(Color("PrimaryColor"))
-                            .cornerRadius(5)
-                            .padding(.top)
+                        ProgressView(
+                            value: Double(patunganDetails.paidParticipants),
+                            total: Double(patunganDetails.members.count))
+                                .progressViewStyle(LinearProgressViewStyle())
+                                .frame(height: 8)
+                                .accentColor(Color("PrimaryColor"))
+                                .cornerRadius(5)
+                                .padding(.top)
                     }
                     .padding(.vertical)
                     
                 }
                 
                 Section(header: Text("Kontribusi Anggota").font(.subheadline)) {
-                    ForEach(selectedMembers.keys.sorted(), id: \ .self) { name in
+                    ForEach($patunganDetails.members, id: \.memberId) { $member in
                         HStack {
-                            Text(name)
+                            Text(member.name)
                                 .frame(width: 100, alignment: .leading)
                             Spacer()
-                            Text("Rp\(perPersonAmount)")
-                                .frame(width: 100, alignment: .trailing)
+                            Text("Rp\(member.amount, specifier: "%.2f")")
+                                .frame(width: 200, alignment: .trailing)
                                 .fontWeight(.semibold)
                                 .padding(.trailing, 8)
+                            
                             Button(action: {
-                                selectedMembers[name]?.toggle()
+                                member.isPaid.toggle()
+                                onUpdate()
                             }) {
-                                Image(systemName: selectedMembers[name] ?? false ? "checkmark.square.fill" : "square")
+                                Image(systemName: member.isPaid ? "checkmark.square.fill" : "square")
                                     .resizable()
                                     .frame(width: 20, height: 20)
-                                    .foregroundColor(selectedMembers[name] ?? false ? Color("PrimaryColor") : .gray)
+                                    .foregroundColor(member.isPaid ? Color("PrimaryColor") : .gray)
                             }
                             .buttonStyle(PlainButtonStyle())
                         }
@@ -97,11 +90,10 @@ struct DetailPatungan: View {
                 
                 Section(header: Text("Opsi Pembayaran").font(.subheadline)) {
                     VStack(alignment: .leading, spacing: 12) {
-                        
-                        VStack(spacing: 12) {
-                            BankCardView(bankName: "BCA", accountNumber: "4181011739", accountHolder: "Adithya Firmansyah P.")
-                            BankCardView(bankName: "Mandiri", accountNumber: "137-00-1234567-8", accountHolder: "Kiki Rahmadani")
-                            BankCardView(bankName: "BNI", accountNumber: "0641234567", accountHolder: "Zaidan Akbar")
+                        ForEach($patunganDetails.paymentOptions, id: \.paymentOptionId){$paymentOption in
+                            VStack(spacing: 12) {
+                                BankCardView(bankName: paymentOption.bankName, accountNumber: paymentOption.accountNumber, owner: paymentOption.owner)
+                            }
                         }
                     }
                     .padding(.vertical)
@@ -109,17 +101,16 @@ struct DetailPatungan: View {
                 
                 Section(header: Text("Aturan Perjanjian").font(.subheadline)) {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("- Kirim bukti ke pc kalau sudah bayar")
-                        Text("- Max tanggal 29 Maret")
+                        Text(patunganDetails.agreement)
                     }
                     .font(.subheadline)
                 }
                 
                 Button(action: {
-                    let detailText = generatePatunganDetail()
-                    UIPasteboard.general.setValue(detailText, forPasteboardType: "public.utf8-plain-text")
+                    //let detailText = generatePatunganDetail()
+                    //UIPasteboard.general.setValue(detailText, forPasteboardType: "public.utf8-plain-text")
                         
-                    print("Copied to clipboard: \n\(detailText)")
+                    print("Copied to clipboard: ")
                 }) {
                     Text("Salin Detail Patungan")
                         .fontWeight(.semibold)
@@ -134,25 +125,29 @@ struct DetailPatungan: View {
             }
             .navigationTitle("Detail Patungan")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
             .toolbar {
              
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {}) {
+                    Button(action: {presentationMode.wrappedValue.dismiss()}) {
                         Image(systemName: "chevron.left")
                             .foregroundColor(Color("PrimaryColor"))
                     }
                 }
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button(action: {
-                        let detailText = generatePatunganDetail()
-                        UIPasteboard.general.setValue(detailText, forPasteboardType: "public.utf8-plain-text")
+                        //let detailText = generatePatunganDetail()
+                        //UIPasteboard.general.setValue(detailText, forPasteboardType: "public.utf8-plain-text")
                             
-                        print("Copied to clipboard: \n\(detailText)")
+                        print("Copied to clipboard: ")
                     }) {
                         Image(systemName: "document.on.document")
                             .foregroundColor(Color("PrimaryColor"))
                     }
-                    Button(action: { }) {
+                    Button(action: {
+                        deleteThisPatungan(patunganDetails.id)
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
                         Image(systemName: "trash")
                             .foregroundColor(.red)
                     }
@@ -177,7 +172,7 @@ struct DetailPatungan: View {
     struct BankCardView: View {
         var bankName: String
         var accountNumber: String
-        var accountHolder: String
+        var owner: String
         
         @Environment(\.colorScheme) var colorScheme
 
@@ -190,7 +185,7 @@ struct DetailPatungan: View {
                     Text(bankName)
                         .font(.subheadline)
                         .foregroundColor(.gray)
-                    Text(accountHolder)
+                    Text(owner)
                         .font(.subheadline)
                         .foregroundColor(.gray)
                         .lineLimit(1)
@@ -216,8 +211,3 @@ struct DetailPatungan: View {
 
 }
 
-struct DetailPatungan_Previews: PreviewProvider {
-    static var previews: some View {
-        DetailPatungan()
-    }
-}

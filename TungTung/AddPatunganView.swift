@@ -1,11 +1,14 @@
 import SwiftUI
 
 struct Member: Codable {
+    var memberId: UUID = UUID()
     var name: String
     var amount: Double
+    var isPaid: Bool = false
 }
 
 struct PaymentOption: Codable {
+    var paymentOptionId: UUID = UUID()
     var accountNumber: String
     var bankName: String
     var owner: String
@@ -179,10 +182,19 @@ struct AddPatunganView: View {
                 
             }
             .navigationTitle("Tambah Patungan")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .toolbar{
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(Color("PrimaryColor"))
+                    }
+                }
+            }
         }
-        .navigationBarBackButtonHidden(false)
-        .accentColor(Color("PrimaryColor"))
-        .tint(Color("PrimaryColor"))
     }
 }
 
