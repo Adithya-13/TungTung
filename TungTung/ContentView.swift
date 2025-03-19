@@ -21,7 +21,7 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            AppBar( patungans: $patungans, title: "TungTung!")
+            AppBar(patungans: $patungans, title: "TungTung!")
             Divider()
             VStack {
                 if patungans.isEmpty {
