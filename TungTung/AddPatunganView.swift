@@ -90,7 +90,7 @@ struct AddPatunganView: View {
                     }
                 }
                 
-                Section(header: Text("Tambah Orang")) {
+                Section(header: Text("Orang")) {
                     ForEach(members, id: \.name) { member in
                         HStack {
                             Text(member.name)
@@ -98,7 +98,7 @@ struct AddPatunganView: View {
                             Text("Rp \(member.amount, specifier: "%.2f")") // Format the amount
                         }
                     }.onDelete(perform: deleteMember)
-                    Button("Orang") {
+                    Button("Tambah Orang") {
                         // Show sheet to add a new member
                         showAddMemberSheet.toggle()
                     }
