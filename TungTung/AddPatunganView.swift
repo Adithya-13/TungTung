@@ -36,8 +36,8 @@ struct AddPatunganView: View {
             UserDefaults.standard.set(encoded, forKey: "savedPatungans")
         }
     }
-        
-        
+    
+    
     func calculateMemberAmount(amount: Int, members: inout [Member]) {
         guard amount > 0 else {
             for index in members.indices {
@@ -45,7 +45,7 @@ struct AddPatunganView: View {
             }
             return
         }
-
+        
         let numberOfMembers = Double(members.count)
         if numberOfMembers > 0 {
             let memberAmount = Double(amount) / numberOfMembers
@@ -54,22 +54,22 @@ struct AddPatunganView: View {
             }
         }
     }
-        
+    
     func deleteMember(at offsets: IndexSet) {
         members.remove(atOffsets: offsets)
     }
-        
+    
     func deletePaymentOption(at offsets: IndexSet) {
-            paymentOptions.remove(atOffsets: offsets)
+        paymentOptions.remove(atOffsets: offsets)
     }
-
+    
     var body: some View {
         NavigationStack {
             Form {
                 Section(header: Text("Judul Patungan")) {
                     TextField("Contoh: Nobar Interstellar", text: $title)
                         .background(Color.clear)
-                        .cornerRadius(8)
+                    
                 }
                 
                 Section(header: Text("Jumlah Harga")) {
@@ -86,10 +86,10 @@ struct AddPatunganView: View {
                                 calculateMemberAmount(amount: amount, members: &members)
                             }
                             .background(Color.clear)
-                            .cornerRadius(8)
+                        
                     }
                 }
-
+                
                 Section(header: Text("Tambah Orang")) {
                     ForEach(members, id: \.name) { member in
                         HStack {
@@ -98,10 +98,11 @@ struct AddPatunganView: View {
                             Text("Rp \(member.amount, specifier: "%.2f")") // Format the amount
                         }
                     }.onDelete(perform: deleteMember)
-                    Button("Tambah Orang") {
+                    Button("Orang") {
                         // Show sheet to add a new member
                         showAddMemberSheet.toggle()
                     }
+                    .foregroundStyle(Color("PrimaryColor"))
                     .sheet(isPresented: $showAddMemberSheet) {
                         AddMemberSheet(newMemberName: $newMemberName, onSave: {
                             if !newMemberName.isEmpty {
@@ -116,8 +117,8 @@ struct AddPatunganView: View {
                         })
                     }
                 }
-
-                Section(header: Text("Tambah Opsi Pembayaran")) {
+                
+                Section(header: Text("Opsi Pembayaran")) {
                     ForEach(paymentOptions, id: \.accountNumber) { option in
                         HStack {
                             Text(option.accountNumber)
@@ -131,6 +132,7 @@ struct AddPatunganView: View {
                         // Show sheet to add a new payment option
                         showAddPaymentSheet.toggle()
                     }
+                    .foregroundStyle(Color("PrimaryColor"))
                     .sheet(isPresented: $showAddPaymentSheet) {
                         AddPaymentSheet(newPaymentAccount: $newPaymentAccount, newPaymentBank: $newPaymentBank, newPaymentOwner: $newPaymentOwner, onSave: {
                             if !newPaymentAccount.isEmpty && !newPaymentBank.isEmpty && !newPaymentOwner.isEmpty {
@@ -150,7 +152,7 @@ struct AddPatunganView: View {
                         })
                     }
                 }
-
+                
                 Section(header: Text("Agreement Rule")) {
                     TextEditor(text: $agreementRule)
                         .background(Color.clear)
@@ -158,7 +160,7 @@ struct AddPatunganView: View {
                         .padding(.horizontal)
                 }
                 
-                Button("Simpan") {
+                Button {
                     let newPatungan = Patungan(
                         title: title,
                         members: members,
@@ -168,15 +170,25 @@ struct AddPatunganView: View {
                     saveToStorage()
                     
                     dismiss()
-                };
+                } label: {
+                    Text("Simpan")
+                        .padding(.vertical, 20)
+                        .frame(maxWidth: .infinity)
+                        .background(Color("PrimaryColor"))
+                        .foregroundStyle(.black)
                 }
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .listRowBackground(Color.clear)
                 
                 
             }
             .navigationTitle("Tambah Patungan")
-            .navigationBarBackButtonHidden(false)
         }
+        .navigationBarBackButtonHidden(false)
+        .accentColor(Color("PrimaryColor"))
+        .tint(Color("PrimaryColor"))
     }
+}
 
 
 struct AddMemberSheet: View {
@@ -198,12 +210,12 @@ struct AddMemberSheet: View {
                 Button("Cancel") {
                     onCancel()
                 }
-                .foregroundColor(.blue)
+                .foregroundColor(Color("PrimaryColor"))
                 Spacer()
                 Button("Save") {
                     onSave()
                 }
-                .foregroundColor(.blue)
+                .foregroundColor(Color("PrimaryColor"))
             }
             .padding()
         }
@@ -237,12 +249,12 @@ struct AddPaymentSheet: View {
                 Button("Cancel") {
                     onCancel()
                 }
-                .foregroundColor(.blue)
+                .foregroundColor(Color("PrimaryColor"))
                 Spacer()
                 Button("Save") {
                     onSave()
                 }
-                .foregroundColor(.blue)
+                .foregroundColor(Color("PrimaryColor"))
             }
             .padding()
         }
