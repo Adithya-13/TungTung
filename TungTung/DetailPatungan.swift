@@ -64,7 +64,6 @@ struct DetailPatungan: View {
                             .progressViewStyle(LinearProgressViewStyle())
                             .frame(height: 8)
                             .accentColor(Color("Orange"))
-                            .background(Color.tintedOrange)
                             .cornerRadius(5)
                             .padding(.top)
                     }
@@ -123,11 +122,11 @@ struct DetailPatungan: View {
                     print("Copied to clipboard: \n\(detailText)")
                 }) {
                     Text("Salin Detail Patungan")
-                        .foregroundColor(.white)
                         .fontWeight(.semibold)
                         .padding()
                         .frame(maxWidth: .infinity)
                         .background(Color("Orange"))
+                        .foregroundStyle(.black)
                         .cornerRadius(8)
                 }
                 .listRowBackground(Color.clear)
