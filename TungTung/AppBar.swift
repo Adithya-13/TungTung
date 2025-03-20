@@ -26,6 +26,5 @@ struct AppBar: View{
             }
         }
         .padding(.bottom)
-        .frame(height: .infinity)
     }
 }

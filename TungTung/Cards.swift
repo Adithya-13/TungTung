@@ -41,7 +41,7 @@ struct Cards: View {
                     }
                     HStack {
                         Spacer()
-                        Text("\(patunganDetails.amount, format: .currency(code: "IDR"))")
+                        Text("/ \(patunganDetails.amount, format: .currency(code: "IDR"))")
                             .font(.footnote)
                             .foregroundColor(.gray)
                     }

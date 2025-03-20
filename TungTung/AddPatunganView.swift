@@ -1,26 +1,12 @@
 import SwiftUI
 
-struct Member: Codable {
-    var memberId: UUID = UUID()
-    var name: String
-    var amount: Double
-    var isPaid: Bool = false
-}
-
-struct PaymentOption: Codable {
-    var paymentOptionId: UUID = UUID()
-    var accountNumber: String
-    var bankName: String
-    var owner: String
-}
-
 struct AddPatunganView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var patungans: [Patungan]
     
     @State private var title = ""
     @State private var price: String = ""
-    @State private var amount: Int = 0
+    @State private var amount: Int? = nil
     @State private var members: [Member] = []
     @State private var paymentOptions: [PaymentOption] = []
     @State private var agreementRule = ""
@@ -65,6 +51,7 @@ struct AddPatunganView: View {
             Form {
                 Section(header: Text("Judul Patungan")) {
                     TextField("Contoh: Nobar Interstellar", text: $title)
+                        .submitLabel(.next)
                         .background(Color.clear)
                         .accentColor(Color("PrimaryColor"))
                     
@@ -74,8 +61,9 @@ struct AddPatunganView: View {
                     HStack {
                         TextField("500.000", value: $amount, format: .currency(code: "IDR"))
                             .keyboardType(.numberPad)
+                            .submitLabel(.done)
                             .onChange(of: amount) {
-                                calculateMemberAmount(amount: amount, members: &members)
+                                calculateMemberAmount(amount: amount ?? 0, members: &members)
                             }
                             .accentColor(Color("PrimaryColor"))
                             .background(Color.clear)
@@ -88,7 +76,7 @@ struct AddPatunganView: View {
                         HStack {
                             Text(member.name)
                             Spacer()
-                            Text("Rp \(member.amount, specifier: "%.2f")") // Format the amount
+                            Text("\(member.amount, format: .currency(code: "IDR"))") // Format the amount
                         }
                     }.onDelete(perform: deleteMember)
                     Button("Tambah Orang") {
@@ -101,7 +89,7 @@ struct AddPatunganView: View {
                             if !newMemberName.isEmpty {
                                 members.append(Member(name: newMemberName, amount: memberAmount))
                                 newMemberName = ""
-                                calculateMemberAmount(amount: amount, members: &members)
+                                calculateMemberAmount(amount: amount ?? 0, members: &members)
                                 showAddMemberSheet.toggle()
                             }
                         }, onCancel: {
@@ -148,6 +136,7 @@ struct AddPatunganView: View {
                 
                 Section(header: Text("Agreement Rule")) {
                     TextEditor(text: $agreementRule)
+                        .submitLabel(.done)
                         .background(Color.clear)
                         .cornerRadius(8)
                         .padding(.horizontal)
@@ -156,7 +145,7 @@ struct AddPatunganView: View {
                 Button {
                     let newPatungan = Patungan(
                         title: title,
-                        amount: amount,
+                        amount: amount ?? 0,
                         members: members,
                         paymentOptions: paymentOptions,
                         agreement: agreementRule
@@ -177,6 +166,7 @@ struct AddPatunganView: View {
                 
                 
             }
+            .scrollDismissesKeyboard(.immediately)
             .navigationTitle("Tambah Patungan")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)

@@ -8,22 +8,6 @@
 import SwiftUI
 import Lottie
 
-struct Patungan: Codable{
-    var id: UUID = UUID()
-    var title: String = ""
-    var amount: Int
-    var members: [Member]
-    var paymentOptions: [PaymentOption]
-    var agreement: String = ""
-    var accumulatedAmount: Double {
-        members.filter(\.isPaid).map { Double($0.amount) }.reduce(0, +)
-    }
-    var paidParticipants: Int {
-        members.filter { $0.isPaid }.count
-    }
-}
-
-
 func saveToStorage(patungans: [Patungan]) {
     if let encoded = try? JSONEncoder().encode(patungans) {
         UserDefaults.standard.set(encoded, forKey: "savedPatungans")
@@ -65,7 +49,7 @@ struct ContentView: View {
                             .resizable()
                             .frame(width: 350, height: 350)
                             .scaledToFit()
-                        Text("Belum ada patungan")
+                        Text("Belum ada patungan nih      ")
                             .font(.footnote)
                             .padding(.bottom)
                         

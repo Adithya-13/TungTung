@@ -101,49 +101,63 @@ struct DetailPatungan: View {
                                 .padding(.vertical, 4)
                             }
                         }
-                        
-                        Section(header: Text("Opsi Pembayaran").font(.subheadline)) {
-                            VStack(alignment: .leading, spacing: 12) {
-                                ForEach($patunganDetails.paymentOptions, id: \.paymentOptionId) { $paymentOption in
-                                    BankCardView(bankName: paymentOption.bankName, accountNumber: paymentOption.accountNumber, owner: paymentOption.owner)
-                                }
-                            }
-                            .padding(.vertical)
-                        }
-                        
-                        Section(header: Text("Aturan Perjanjian").font(.subheadline)) {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text(patunganDetails.agreement)
-                            }
-                            .font(.subheadline)
-                        }
-                        
-                        Button(action: {
-                            let detailText = generatePatunganDetail()
-                            UIPasteboard.general.string = detailText
-                            print("Copied to clipboard: \(detailText)")
-                            
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                showToast = true
-                            }
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    showToast = false
-                                }
-                            }
-                        }) {
-                            Text("Salin Detail Patungan")
-                                .fontWeight(.semibold)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(Color("PrimaryColor"))
-                                .foregroundStyle(.black)
-                                .cornerRadius(8)
-                        }
-                        .listRowBackground(Color.clear)
-                        .listRowInsets(EdgeInsets())
                     }
+                    
+                    Section(header: Text("Opsi Pembayaran").font(.subheadline)) {
+                        VStack(alignment: .leading, spacing: 12) {
+                            ForEach($patunganDetails.paymentOptions, id: \.paymentOptionId) { $paymentOption in
+                                BankCardView(bankName: paymentOption.bankName, accountNumber: paymentOption.accountNumber, owner: paymentOption.owner)
+                                    .onLongPressGesture {
+                                        let bankAccount = "\(paymentOption.owner) - \(paymentOption.bankName)\n\(paymentOption.accountNumber)"
+                                        UIPasteboard.general.string = bankAccount
+                                        //print(bankAccount)
+                                        withAnimation(.easeInOut(duration: 0.3)) {
+                                            showToast = true
+                                        }
+                                        
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                            withAnimation(.easeInOut(duration: 0.3)) {
+                                                showToast = false
+                                            }
+                                        }
+                                    }
+                            }
+                        }
+                        .padding(.vertical)
+                    }
+                    
+                    Section(header: Text("Aturan Perjanjian").font(.subheadline)) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(patunganDetails.agreement)
+                        }
+                        .font(.subheadline)
+                    }
+                    
+                    Button(action: {
+                        let detailText = generatePatunganDetail()
+                        UIPasteboard.general.string = detailText
+                        //print("Copied to clipboard: \(detailText)")
+                        
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            showToast = true
+                        }
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                showToast = false
+                            }
+                        }
+                    }) {
+                        Text("Salin Detail Patungan")
+                            .fontWeight(.semibold)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color("PrimaryColor"))
+                            .foregroundStyle(.black)
+                            .cornerRadius(8)
+                    }
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets())
                     }
                 }
                 
@@ -154,7 +168,7 @@ struct DetailPatungan: View {
                         HStack {
                             Image(systemName: "checkmark.circle.fill")
                                 .foregroundColor(.green)
-                            Text("Detail patungan berhasil disalin!")
+                            Text("Berhasil disalin!")
                                 .font(.subheadline)
                                 .foregroundColor(.black)
                         }
@@ -183,7 +197,7 @@ struct DetailPatungan: View {
                     Button(action: {
                         let detailText = generatePatunganDetail()
                         UIPasteboard.general.string = detailText
-                        print("Copied to clipboard: \(detailText)")
+                        //print("Copied to clipboard: \(detailText)")
                         
                         withAnimation(.easeInOut(duration: 0.3)) {
                             showToast = true
