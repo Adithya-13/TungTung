@@ -15,8 +15,7 @@ struct DetailPatungan: View {
     func generatePatunganDetail() -> String {
         let title = patunganDetails.title
         let totalAmount = patunganDetails.amount
-        let remainingAmount = Double(patunganDetails.amount) - patunganDetails.accumulatedAmount
-        
+
         let membersText = patunganDetails.members.map { member in
             "- \(member.name): Rp\(String(format: "%.2f", member.amount)) \(member.isPaid ? "(Lunas ✅)" : "(Belum Lunas ❌)")"
         }.joined(separator: "\n")
@@ -32,7 +31,7 @@ struct DetailPatungan: View {
         \(title)
         
         💰 **Total Dana:** Rp\(totalAmount)
-        💵 **Sisa Kebutuhan:** Rp\(String(format: "%.2f", remainingAmount))
+        💵 **Sisa Kebutuhan:** Rp\(String(format: "%.2f", remaining))
         
         👥 **Kontribusi Anggota:**
         \(membersText)
@@ -49,112 +48,76 @@ struct DetailPatungan: View {
     
     
     var body: some View {
-        NavigationStack {
-            List {
-                Section {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(patunganDetails.title)
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                        Text("Sisa \(remaining, format: .currency(code: "IDR"))")
-                            .font(.title)
-                            .fontWeight(.semibold)
-                            .foregroundColor(Color("PrimaryColor"))
-                        
-                        Text("Dari \(patunganDetails.amount, format: .currency(code: "IDR"))")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                        
-                        ProgressView(
-                            value: Double(patunganDetails.paidParticipants),
-                            total: Double(patunganDetails.members.count))
-                                .progressViewStyle(LinearProgressViewStyle())
-                                .frame(height: 8)
-                                .accentColor(Color("PrimaryColor"))
-                                .cornerRadius(5)
-                                .padding(.top)
-                    }
-                    .padding(.vertical)
-                    
-                }
-                
-                Section(header: Text("Kontribusi Anggota (\(patunganDetails.paidParticipants)/\(patunganDetails.members.count))").font(.subheadline)) {
-                    ForEach($patunganDetails.members, id: \.memberId) { $member in
-                        HStack {
-                            Text(member.name)
-                                .frame(width: 100, alignment: .leading)
-                            Spacer()
-                            Text("\(member.amount, format: .currency(code: "IDR"))")
-                                .frame(width: 200, alignment: .trailing)
+        ZStack {
+            NavigationStack {
+                List {
+                    Section {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(patunganDetails.title)
+                                .font(.headline)
                                 .fontWeight(.semibold)
-                                .padding(.trailing, 8)
+                            Text("Sisa \(remaining, format: .currency(code: "IDR"))")
+                                .font(.title)
+                                .fontWeight(.semibold)
+                                .foregroundColor(Color("PrimaryColor"))
                             
-                            Button(action: {
-                                member.isPaid.toggle()
-                                onUpdate()
-                            }) {
-                                Image(systemName: member.isPaid ? "checkmark.square.fill" : "square")
-                                    .resizable()
-                                    .frame(width: 20, height: 20)
-                                    .foregroundColor(member.isPaid ? Color("PrimaryColor") : .gray)
-                            }
-                            .padding(.vertical, 4)
-                        }
-                    }
-                    
-                    Section(header: Text("Opsi Pembayaran").font(.subheadline)) {
-                        VStack(alignment: .leading, spacing: 12) {
-                            ForEach($patunganDetails.paymentOptions, id: \.paymentOptionId) { $paymentOption in
-                                BankCardView(bankName: paymentOption.bankName, accountNumber: paymentOption.accountNumber, owner: paymentOption.owner)
-                            }
+                            Text("Dari \(patunganDetails.amount, format: .currency(code: "IDR"))")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                            
+                            ProgressView(
+                                value: Double(patunganDetails.paidParticipants),
+                                total: Double(patunganDetails.members.count))
+                            .progressViewStyle(LinearProgressViewStyle())
+                            .frame(height: 8)
+                            .accentColor(Color("PrimaryColor"))
+                            .cornerRadius(5)
+                            .padding(.top)
                         }
                         .padding(.vertical)
+                        
                     }
                     
-                    Section(header: Text("Aturan Perjanjian").font(.subheadline)) {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(patunganDetails.agreement)
-                        }
-                        .font(.subheadline)
-                    }
-                    
-                    Button(action: {
-                        let detailText = generatePatunganDetail()
-                        UIPasteboard.general.string = detailText
-                        print("Copied to clipboard: \(detailText)")
-                        
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            showToast = true
-                        }
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                showToast = false
+                    Section(header: Text("Kontribusi Anggota (\(patunganDetails.paidParticipants)/\(patunganDetails.members.count))").font(.subheadline)) {
+                        ForEach($patunganDetails.members, id: \.memberId) { $member in
+                            HStack {
+                                Text(member.name)
+                                    .frame(width: 100, alignment: .leading)
+                                Spacer()
+                                Text("\(member.amount, format: .currency(code: "IDR"))")
+                                    .frame(width: 200, alignment: .trailing)
+                                    .fontWeight(.semibold)
+                                    .padding(.trailing, 8)
+                                
+                                Button(action: {
+                                    member.isPaid.toggle()
+                                    onUpdate()
+                                }) {
+                                    Image(systemName: member.isPaid ? "checkmark.square.fill" : "square")
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                        .foregroundColor(member.isPaid ? Color("PrimaryColor") : .gray)
+                                }
+                                .padding(.vertical, 4)
                             }
                         }
-                    }) {
-                        Text("Salin Detail Patungan")
-                            .fontWeight(.semibold)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color("PrimaryColor"))
-                            .foregroundStyle(.black)
-                            .cornerRadius(8)
-                    }
-                    .listRowBackground(Color.clear)
-                    .listRowInsets(EdgeInsets())
-                }
-                .navigationTitle("Detail Patungan")
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationBarBackButtonHidden(true)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button(action: { presentationMode.wrappedValue.dismiss() }) {
-                            Image(systemName: "chevron.left")
-                                .foregroundColor(Color("PrimaryColor"))
+                        
+                        Section(header: Text("Opsi Pembayaran").font(.subheadline)) {
+                            VStack(alignment: .leading, spacing: 12) {
+                                ForEach($patunganDetails.paymentOptions, id: \.paymentOptionId) { $paymentOption in
+                                    BankCardView(bankName: paymentOption.bankName, accountNumber: paymentOption.accountNumber, owner: paymentOption.owner)
+                                }
+                            }
+                            .padding(.vertical)
                         }
-                    }
-                    ToolbarItemGroup(placement: .navigationBarTrailing) {
+                        
+                        Section(header: Text("Aturan Perjanjian").font(.subheadline)) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(patunganDetails.agreement)
+                            }
+                            .font(.subheadline)
+                        }
+                        
                         Button(action: {
                             let detailText = generatePatunganDetail()
                             UIPasteboard.general.string = detailText
@@ -170,41 +133,79 @@ struct DetailPatungan: View {
                                 }
                             }
                         }) {
-                            Image(systemName: "doc.on.doc")
-                                .foregroundColor(Color("PrimaryColor"))
+                            Text("Salin Detail Patungan")
+                                .fontWeight(.semibold)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color("PrimaryColor"))
+                                .foregroundStyle(.black)
+                                .cornerRadius(8)
                         }
-                        Button(action: {
-                            deleteThisPatungan(patunganDetails.id)
-                            presentationMode.wrappedValue.dismiss()
-                        }) {
-                            Image(systemName: "trash")
-                                .foregroundColor(.red)
+                        .listRowBackground(Color.clear)
+                        .listRowInsets(EdgeInsets())
+                    }
+                    }
+                }
+                
+                // **TOAST View**
+                if showToast {
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                            Text("Detail patungan berhasil disalin!")
+                                .font(.subheadline)
+                                .foregroundColor(.black)
                         }
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.white)
+                                .shadow(radius: 4)
+                        )
+                        .padding(.bottom, 50)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
                 }
             }
-            
-            // **TOAST View**
-            if showToast {
-                VStack {
-                    Spacer()
-                    HStack {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.green)
-                        Text("Detail patungan berhasil disalin!")
-                            .font(.subheadline)
-                            .foregroundColor(.black)
+            .navigationTitle("Detail Patungan")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: { presentationMode.wrappedValue.dismiss() }) {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(Color("PrimaryColor"))
                     }
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.white)
-                            .shadow(radius: 4)
-                    )
-                    .padding(.bottom, 50)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
-            }
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        let detailText = generatePatunganDetail()
+                        UIPasteboard.general.string = detailText
+                        print("Copied to clipboard: \(detailText)")
+                        
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            showToast = true
+                        }
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                showToast = false
+                            }
+                        }
+                    }) {
+                        Image(systemName: "doc.on.doc")
+                            .foregroundColor(Color("PrimaryColor"))
+                    }
+                    Button(action: {
+                        deleteThisPatungan(patunganDetails.id)
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Image(systemName: "trash")
+                            .foregroundColor(.red)
+                    }
+                }
         }
     }
     
