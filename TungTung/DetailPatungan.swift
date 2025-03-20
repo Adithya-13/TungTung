@@ -40,12 +40,12 @@ struct DetailPatungan: View {
                         Text(patunganDetails.title)
                             .font(.headline)
                             .fontWeight(.semibold)
-                        Text("Sisa Rp\(Double(patunganDetails.amount) - patunganDetails.accumulatedAmount, specifier: "%.2f")")
+                        Text("Sisa \(remaining, format: .currency(code: "IDR"))")
                             .font(.title)
                             .fontWeight(.semibold)
                             .foregroundColor(Color("PrimaryColor"))
                         
-                        Text("Dari Rp\(patunganDetails.amount)")
+                        Text("Dari \(patunganDetails.amount, format: .currency(code: "IDR"))")
                             .font(.subheadline)
                             .foregroundColor(.gray)
                         
@@ -62,13 +62,13 @@ struct DetailPatungan: View {
                     
                 }
                 
-                Section(header: Text("Kontribusi Anggota").font(.subheadline)) {
+                Section(header: Text("Kontribusi Anggota (\(patunganDetails.paidParticipants)/\(patunganDetails.members.count))").font(.subheadline)) {
                     ForEach($patunganDetails.members, id: \.memberId) { $member in
                         HStack {
                             Text(member.name)
                                 .frame(width: 100, alignment: .leading)
                             Spacer()
-                            Text("Rp\(member.amount, specifier: "%.2f")")
+                            Text("\(member.amount, format: .currency(code: "IDR"))")
                                 .frame(width: 200, alignment: .trailing)
                                 .fontWeight(.semibold)
                                 .padding(.trailing, 8)

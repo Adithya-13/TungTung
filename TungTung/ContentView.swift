@@ -88,8 +88,8 @@ struct ContentView: View {
                         }
                     }
                     NavigationLink(destination: AddPatunganView(patungans: $patungans)){
-                        Image(systemName: "plus")
-                            .font(.title)
+                        Label("Tambahkan Patungan", systemImage: "plus")
+                            .font(.headline)
                             .frame(maxWidth: .infinity)
                             .padding(.top)
                             .foregroundStyle(Color("TintedOrange"))

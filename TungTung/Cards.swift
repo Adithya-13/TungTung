@@ -11,13 +11,13 @@ struct Cards: View {
     @Binding var patunganDetails: Patungan
     var updatePatungan: () -> Void
     var requestDelete: (UUID) -> Void
-
-    var formattedAmount: String {
+    
+    private func formattedAmount(amount: Double) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.groupingSeparator = "."
         formatter.usesGroupingSeparator = true
-        return formatter.string(from: NSNumber(value: patunganDetails.accumulatedAmount)) ?? "0"
+        return formatter.string(from: NSNumber(value: amount)) ?? "0"
     }
 
     var body: some View {
@@ -31,12 +31,20 @@ struct Cards: View {
                     .font(.footnote)
                     .foregroundColor(.gray)
 
-                HStack {
-                    Spacer()
-                    Text("Rp\(formattedAmount)")
-                        .font(.title)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(Color("PrimaryColor"))
+                VStack(alignment: .leading){
+                    HStack {
+                        Spacer()
+                        Text("\(patunganDetails.accumulatedAmount, format: .currency(code: "IDR"))")
+                            .font(.title)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(Color("PrimaryColor"))
+                    }
+                    HStack {
+                        Spacer()
+                        Text("\(patunganDetails.amount, format: .currency(code: "IDR"))")
+                            .font(.footnote)
+                            .foregroundColor(.gray)
+                    }
                 }
 
                 ProgressView(value: Double(patunganDetails.paidParticipants) / Double(patunganDetails.members.count))

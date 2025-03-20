@@ -66,22 +66,18 @@ struct AddPatunganView: View {
                 Section(header: Text("Judul Patungan")) {
                     TextField("Contoh: Nobar Interstellar", text: $title)
                         .background(Color.clear)
+                        .accentColor(Color("PrimaryColor"))
                     
                 }
                 
                 Section(header: Text("Jumlah Harga")) {
                     HStack {
-                        Text("Rp")
-                        TextField("500.000", text: $price)
+                        TextField("500.000", value: $amount, format: .currency(code: "IDR"))
                             .keyboardType(.numberPad)
-                            .onChange(of: price) { newValue in
-                                let filtered = newValue.filter { "0123456789".contains($0) }
-                                if filtered != newValue {
-                                    price = filtered // Remove invalid characters
-                                }
-                                amount = Int(price) ?? 0
+                            .onChange(of: amount) {
                                 calculateMemberAmount(amount: amount, members: &members)
                             }
+                            .accentColor(Color("PrimaryColor"))
                             .background(Color.clear)
                         
                     }
@@ -104,12 +100,12 @@ struct AddPatunganView: View {
                         AddMemberSheet(newMemberName: $newMemberName, onSave: {
                             if !newMemberName.isEmpty {
                                 members.append(Member(name: newMemberName, amount: memberAmount))
-                                newMemberName = "" // ✅ Clear input field
+                                newMemberName = ""
                                 calculateMemberAmount(amount: amount, members: &members)
                                 showAddMemberSheet.toggle()
                             }
                         }, onCancel: {
-                            newMemberName = "" // ✅ Also clear on cancel
+                            newMemberName = ""
                             showAddMemberSheet.toggle()
                         })
                     }
@@ -212,6 +208,7 @@ struct AddMemberSheet: View {
             
             TextField("Enter member name", text: $newMemberName)
                 .padding()
+                .accentColor(Color("PrimaryColor"))
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             
             HStack {
@@ -246,12 +243,15 @@ struct AddPaymentSheet: View {
             
             TextField("Account Number", text: $newPaymentAccount)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .accentColor(Color("PrimaryColor"))
             
             TextField("Bank Name", text: $newPaymentBank)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .accentColor(Color("PrimaryColor"))
             
             TextField("Owner", text: $newPaymentOwner)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .accentColor(Color("PrimaryColor"))
             
             HStack {
                 Button("Cancel") {
