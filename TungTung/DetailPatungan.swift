@@ -56,14 +56,22 @@ struct DetailPatungan: View {
                             Text(patunganDetails.title)
                                 .font(.headline)
                                 .fontWeight(.semibold)
-                            Text("Sisa \(remaining, format: .currency(code: "IDR"))")
+                            
+                            Text("\(patunganDetails.accumulatedAmount, format: .currency(code: "IDR"))")
                                 .font(.title)
                                 .fontWeight(.semibold)
                                 .foregroundColor(Color("PrimaryColor"))
                             
-                            Text("Dari \(patunganDetails.amount, format: .currency(code: "IDR"))")
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
+                            HStack(spacing: 5) {
+                                
+                                Text("Terkumpul dari")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                
+                                Text("\(patunganDetails.amount, format: .currency(code: "IDR"))")
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                            }
                             
                             ProgressView(
                                 value: Double(patunganDetails.paidParticipants),
@@ -81,11 +89,13 @@ struct DetailPatungan: View {
                     Section(header: Text("Kontribusi Anggota (\(patunganDetails.paidParticipants)/\(patunganDetails.members.count))").font(.subheadline)) {
                         ForEach($patunganDetails.members, id: \.memberId) { $member in
                             HStack {
+                                Image(systemName: "person.fill")
+                                    .foregroundColor(Color("PrimaryColor"))
                                 Text(member.name)
                                     .frame(width: 100, alignment: .leading)
                                 Spacer()
                                 Text("\(member.amount, format: .currency(code: "IDR"))")
-                                    .frame(width: 200, alignment: .trailing)
+                                    .frame(alignment: .trailing)
                                     .fontWeight(.semibold)
                                     .padding(.trailing, 8)
                                 
@@ -223,18 +233,18 @@ struct DetailPatungan: View {
         }
     }
     
-    struct CheckboxToggleStyle: ToggleStyle {
-        func makeBody(configuration: Configuration) -> some View {
-            Button(action: {
-                configuration.isOn.toggle()
-            }) {
-                Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                    .foregroundColor(configuration.isOn ? Color("PrimaryColor") : .tintedOrange)
-            }
-        }
-    }
+//    struct CheckboxToggleStyle: ToggleStyle {
+//        func makeBody(configuration: Configuration) -> some View {
+//            Button(action: {
+//                configuration.isOn.toggle()
+//            }) {
+//                Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
+//                    .resizable()
+//                    .frame(width: 24, height: 24)
+//                    .foregroundColor(configuration.isOn ? Color("PrimaryColor") : .tintedOrange)
+//            }
+//        }
+//    }
     
     struct BankCardView: View {
         var bankName: String
