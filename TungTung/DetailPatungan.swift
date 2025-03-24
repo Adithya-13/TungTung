@@ -15,7 +15,7 @@ struct DetailPatungan: View {
     func generatePatunganDetail() -> String {
         let title = patunganDetails.title
         let totalAmount = patunganDetails.amount
-
+        
         let membersText = patunganDetails.members.map { member in
             "- \(member.name): Rp\(String(format: "%.2f", member.amount)) \(member.isPaid ? "(Lunas ✅)" : "(Belum Lunas ❌)")"
         }.joined(separator: "\n")
@@ -45,6 +45,7 @@ struct DetailPatungan: View {
     }
     
     @State private var showToast = false
+    @State var isAlertPresented = false
     
     
     var body: some View {
@@ -120,7 +121,6 @@ struct DetailPatungan: View {
                                     .onLongPressGesture {
                                         let bankAccount = "\(paymentOption.owner) - \(paymentOption.bankName)\n\(paymentOption.accountNumber)"
                                         UIPasteboard.general.string = bankAccount
-                                        //print(bankAccount)
                                         withAnimation(.easeInOut(duration: 0.3)) {
                                             showToast = true
                                         }
@@ -168,83 +168,94 @@ struct DetailPatungan: View {
                     }
                     .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets())
-                    }
-                }
-                
-                // **TOAST View**
-                if showToast {
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.green)
-                            Text("Berhasil disalin!")
-                                .font(.subheadline)
-                                .foregroundColor(.black)
-                        }
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(Color.white)
-                                .shadow(radius: 4)
-                        )
-                        .padding(.bottom, 50)
-                        .transition(.move(edge: .bottom).combined(with: .opacity))
-                    }
                 }
             }
-            .navigationTitle("Detail Patungan")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: { presentationMode.wrappedValue.dismiss() }) {
-                        Image(systemName: "chevron.left")
-                            .foregroundColor(Color("PrimaryColor"))
+            
+            // **TOAST View**
+            if showToast {
+                VStack {
+                    Spacer()
+                    HStack {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                        Text("Berhasil disalin!")
+                            .font(.subheadline)
+                            .foregroundColor(.black)
                     }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.white)
+                            .shadow(radius: 4)
+                    )
+                    .padding(.bottom, 50)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        let detailText = generatePatunganDetail()
-                        UIPasteboard.general.string = detailText
-                        //print("Copied to clipboard: \(detailText)")
-                        
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            showToast = true
-                        }
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                showToast = false
-                            }
-                        }
-                    }) {
-                        Image(systemName: "doc.on.doc")
-                            .foregroundColor(Color("PrimaryColor"))
-                    }
-                    Button(action: {
-                        deleteThisPatungan(patunganDetails.id)
-                        presentationMode.wrappedValue.dismiss()
-                    }) {
-                        Image(systemName: "trash")
-                            .foregroundColor(.red)
-                    }
-                }
+            }
         }
+        .navigationTitle("Detail Patungan")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: { presentationMode.wrappedValue.dismiss() }) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(Color("PrimaryColor"))
+                }
+            }
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                ShareLink(item: generatePatunganDetail()){
+                    Image(systemName: "square.and.arrow.up")
+                        .foregroundStyle(Color("PrimaryColor"))
+                }
+                //                    Button(action: {
+                //                        let detailText = generatePatunganDetail()
+                //                        UIPasteboard.general.string = detailText
+                //                        //print("Copied to clipboard: \(detailText)")
+                //
+                //                        withAnimation(.easeInOut(duration: 0.3)) {
+                //                            showToast = true
+                //                        }
+                //
+                //                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                //                            withAnimation(.easeInOut(duration: 0.3)) {
+                //                                showToast = false
+                //                            }
+                //                        }
+                //                    }) {
+                //                        Image(systemName: "doc.on.doc")
+                //                            .foregroundColor(Color("PrimaryColor"))
+                //                    }
+                Button(action: {
+                    isAlertPresented = true
+                }) {
+                    Image(systemName: "trash")
+                        .foregroundColor(.red)
+                }
+            }
+        }
+        .alert("Delete Patungan?", isPresented: $isAlertPresented, actions: {
+            Button("Delete", role: .destructive) {
+                deleteThisPatungan(patunganDetails.id)
+                presentationMode.wrappedValue.dismiss()
+            }
+        }, message: {
+            Text("Anda akan menghapus patungan ini secara permanen. Lanjutkan?")
+        })
     }
     
-//    struct CheckboxToggleStyle: ToggleStyle {
-//        func makeBody(configuration: Configuration) -> some View {
-//            Button(action: {
-//                configuration.isOn.toggle()
-//            }) {
-//                Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
-//                    .resizable()
-//                    .frame(width: 24, height: 24)
-//                    .foregroundColor(configuration.isOn ? Color("PrimaryColor") : .tintedOrange)
-//            }
-//        }
-//    }
+    //    struct CheckboxToggleStyle: ToggleStyle {
+    //        func makeBody(configuration: Configuration) -> some View {
+    //            Button(action: {
+    //                configuration.isOn.toggle()
+    //            }) {
+    //                Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
+    //                    .resizable()
+    //                    .frame(width: 24, height: 24)
+    //                    .foregroundColor(configuration.isOn ? Color("PrimaryColor") : .tintedOrange)
+    //            }
+    //        }
+    //    }
     
     struct BankCardView: View {
         var bankName: String
@@ -276,11 +287,11 @@ struct DetailPatungan: View {
             }
             .padding()
             .frame(maxWidth: .infinity)
-            .background(Color(.tertiarySystemBackground)) // Background adaptif
+            .background(Color(.tertiarySystemBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(colorScheme == .dark ? Color.white.opacity(0.2) : Color.black.opacity(0.1), lineWidth: 1) // Border adaptif
+                    .stroke(colorScheme == .dark ? Color.white.opacity(0.2) : Color.black.opacity(0.1), lineWidth: 1)
             )
         }
     }

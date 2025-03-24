@@ -156,10 +156,12 @@ struct AddPatunganView: View {
                     dismiss()
                 } label: {
                     Text("Simpan")
+                        .fontWeight(.semibold)
                         .padding(.vertical, 20)
                         .frame(maxWidth: .infinity)
                         .background(Color("PrimaryColor"))
                         .foregroundStyle(.black)
+                        
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 16))
                 .listRowBackground(Color.clear)

@@ -56,7 +56,7 @@ struct ContentView: View {
                         NavigationLink(destination: AddPatunganView(patungans: $patungans)){
                             Label("Tambahkan Patungan", systemImage: "plus")
                                 .font(.subheadline)
-                                .foregroundStyle(Color.white)
+                                .foregroundStyle(Color.black)
                                 .padding()
                                 .frame(width: 250, height: 50)
                                 .background(Color("PrimaryColor"))
@@ -68,7 +68,10 @@ struct ContentView: View {
                 } else {
                     List {
                         ForEach($patungans, id: \.id) { patunganDetails in
-                            Cards(patunganDetails: patunganDetails, updatePatungan: {saveToStorage(patungans: patungans)}, requestDelete: deletePatungan)
+                            Section() {
+                                Cards(patunganDetails: patunganDetails, updatePatungan: {saveToStorage(patungans: patungans)}, requestDelete: deletePatungan)
+                            }
+                            .listSectionSpacing(15)
                         }
                     }
                     NavigationLink(destination: AddPatunganView(patungans: $patungans)){
@@ -76,7 +79,7 @@ struct ContentView: View {
                             .font(.headline)
                             .frame(maxWidth: .infinity)
                             .padding(.top)
-                            .foregroundStyle(Color("TintedOrange"))
+                            .foregroundStyle(Color.black)
                             .background(Color("PrimaryColor"))
                     }
                 }
@@ -84,6 +87,7 @@ struct ContentView: View {
             }
             .onAppear(perform: loadFromStorage)
         }
+        .preferredColorScheme(.dark)
     }
 }
 
