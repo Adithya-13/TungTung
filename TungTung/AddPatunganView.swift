@@ -21,7 +21,7 @@ struct AddPatunganView: View {
     @State private var memberAmount: Double = 0.0
     
     func isValid() -> Bool {
-        return !title.isEmpty && !price.isEmpty && amount != nil && !agreementRule.isEmpty && !members.isEmpty && !paymentOptions.isEmpty
+        return !title.isEmpty && !price.isEmpty && amount != nil && !members.isEmpty && !paymentOptions.isEmpty
     }
     
     
