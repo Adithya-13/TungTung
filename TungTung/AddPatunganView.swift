@@ -20,6 +20,10 @@ struct AddPatunganView: View {
     @State private var showAddPaymentSheet = false
     @State private var memberAmount: Double = 0.0
     
+    func isValid() -> Bool {
+        return !title.isEmpty && !price.isEmpty && amount != nil && !agreementRule.isEmpty && !members.isEmpty && !paymentOptions.isEmpty
+    }
+    
     
     private func calculateMemberAmount(amount: Int, members: inout [Member]) {
         guard amount > 0 else {
@@ -159,12 +163,13 @@ struct AddPatunganView: View {
                         .fontWeight(.semibold)
                         .padding(.vertical, 20)
                         .frame(maxWidth: .infinity)
-                        .background(Color("PrimaryColor"))
-                        .foregroundStyle(.black)
+                        .background(isValid() ? Color("PrimaryColor") : Color.gray)
+                        .foregroundStyle(isValid() ? .black : .white)
                         
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 16))
                 .listRowBackground(Color.clear)
+                .disabled(!isValid())
                 
                 
             }
