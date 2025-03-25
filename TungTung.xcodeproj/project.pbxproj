@@ -91,7 +91,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 4D6C965D2D8956F700681875 /* Build configuration list for PBXProject "TungTung" */;
+			buildConfigurationList = 4D6C965D2D8956F700681875 /* Build configuration list for PBXProject "TungTung!" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -262,7 +262,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TungTung/Preview Content\"";
+<<<<<<< Updated upstream:TungTung.xcodeproj/project.pbxproj
 				DEVELOPMENT_TEAM = 32T8HNVYGX;
+=======
+				DEVELOPMENT_TEAM = DNY65J2HJ2;
+>>>>>>> Stashed changes:TungTung!.xcodeproj/project.pbxproj
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -275,7 +279,11 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+<<<<<<< Updated upstream:TungTung.xcodeproj/project.pbxproj
 				PRODUCT_BUNDLE_IDENTIFIER = com.adail;
+=======
+				PRODUCT_BUNDLE_IDENTIFIER = ADA.TungTung;
+>>>>>>> Stashed changes:TungTung!.xcodeproj/project.pbxproj
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -293,7 +301,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TungTung/Preview Content\"";
+<<<<<<< Updated upstream:TungTung.xcodeproj/project.pbxproj
 				DEVELOPMENT_TEAM = 32T8HNVYGX;
+=======
+				DEVELOPMENT_TEAM = DNY65J2HJ2;
+>>>>>>> Stashed changes:TungTung!.xcodeproj/project.pbxproj
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -306,7 +318,11 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+<<<<<<< Updated upstream:TungTung.xcodeproj/project.pbxproj
 				PRODUCT_BUNDLE_IDENTIFIER = ada.il.tungtung;
+=======
+				PRODUCT_BUNDLE_IDENTIFIER = ADA.TungTung;
+>>>>>>> Stashed changes:TungTung!.xcodeproj/project.pbxproj
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -318,7 +334,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4D6C965D2D8956F700681875 /* Build configuration list for PBXProject "TungTung" */ = {
+		4D6C965D2D8956F700681875 /* Build configuration list for PBXProject "TungTung!" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4D6C966E2D8956F800681875 /* Debug */,

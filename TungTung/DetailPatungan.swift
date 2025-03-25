@@ -3,6 +3,12 @@ import SwiftUI
 struct DetailPatungan: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.modelContext) private var modelContext
+<<<<<<< Updated upstream
+=======
+    @Bindable var patunganDetails: Patungan
+//    var onUpdate: () -> Void
+//    var deleteThisPatungan: (UUID) -> Void
+>>>>>>> Stashed changes
     
     @Bindable var patunganDetails: Patungan
 //    var onUpdate: () -> Void
@@ -257,8 +263,16 @@ struct DetailPatungan: View {
                 }
             }
         }
+<<<<<<< Updated upstream
         .alert("Delete Patungan?", isPresented: $isAlertPresented, actions: {
             Button("Delete", role: .destructive) {
+=======
+        .alert("Hapus Patungan?", isPresented: $isAlertPresented, actions: {
+            Button("Batal", role: .cancel) {
+                isAlertPresented = false
+            }
+            Button("Hapus", role: .destructive) {
+>>>>>>> Stashed changes
                 modelContext.delete(patunganDetails)
                 presentationMode.wrappedValue.dismiss()
             }

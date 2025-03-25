@@ -16,15 +16,18 @@ import Lottie
 //}
 
 struct ContentView: View {
+<<<<<<< Updated upstream
     @Query var patungans: [Patungan] = []
+=======
+    
+    @Query var patungans: [Patungan]
+>>>>>>> Stashed changes
     
     private var animation: String = "frankensteinAnm.json"
     
-    /*
-    func deleteAllPatungans() {
-        patungans.removeAll()
-        UserDefaults.standard.removeObject(forKey: "savedPatungans")
-    }*/
+//    func deleteAllPatungans() {
+//        patungans.removeAll()
+//        UserDefaults.standard.removeObject(forKey: "savedPatungans")
     
 //    private func deletePatungan(id: UUID) {
 //        patungans.removeAll { $0.id == id } // Remove by ID
@@ -67,7 +70,11 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     List {
+<<<<<<< Updated upstream
                         ForEach(patungans) { patunganDetails in
+=======
+                        ForEach(patungans, id: \.id) { patunganDetails in
+>>>>>>> Stashed changes
                             Section() {
                                 Cards(patunganDetails: patunganDetails/*, updatePatungan: {saveToStorage(patungans: patungans)}, requestDelete: deletePatungan*/)
                             }
@@ -85,7 +92,11 @@ struct ContentView: View {
                 }
                 
             }
+<<<<<<< Updated upstream
             //.onAppear(perform: loadFromStorage)
+=======
+//            .onAppear(perform: loadFromStorage)
+>>>>>>> Stashed changes
         }
         .preferredColorScheme(.dark)
     }
