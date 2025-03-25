@@ -154,16 +154,8 @@ struct AddPatunganView: View {
                         paymentOptions: paymentOptions,
                         agreement: agreementRule
                         )
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
 //                    patungans.append(newPatungan)
 //                    saveToStorage(patungans: patungans)
->>>>>>> Stashed changes
-=======
-//                    patungans.append(newPatungan)
-//                    saveToStorage(patungans: patungans)
->>>>>>> Stashed changes
                     modelContext.insert(newPatungan)
                     try? modelContext.save()
                     

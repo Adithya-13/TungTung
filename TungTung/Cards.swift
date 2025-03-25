@@ -22,15 +22,7 @@ struct Cards: View {
 
     var body: some View {
         
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         NavigationLink(destination: DetailPatungan(patunganDetails: patunganDetails)) {
-=======
-        NavigationLink(destination: DetailPatungan(patunganDetails: patunganDetails/*, onUpdate: updatePatungan, deleteThisPatungan: requestDelete*/)) {
->>>>>>> Stashed changes
-=======
-        NavigationLink(destination: DetailPatungan(patunganDetails: patunganDetails/*, onUpdate: updatePatungan, deleteThisPatungan: requestDelete*/)) {
->>>>>>> Stashed changes
             VStack(alignment: .leading) {
                 Text(patunganDetails.title)
                     .font(.title)

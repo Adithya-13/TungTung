@@ -16,15 +16,8 @@ import Lottie
 //}
 
 struct ContentView: View {
-<<<<<<< Updated upstream
+
     @Query var patungans: [Patungan] = []
-=======
-    
-    @Query var patungans: [Patungan]
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     
     private var animation: String = "frankensteinAnm.json"
     
@@ -73,15 +66,7 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     List {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
                         ForEach(patungans) { patunganDetails in
-=======
-                        ForEach(patungans, id: \.id) { patunganDetails in
->>>>>>> Stashed changes
-=======
-                        ForEach(patungans, id: \.id) { patunganDetails in
->>>>>>> Stashed changes
                             Section() {
                                 Cards(patunganDetails: patunganDetails/*, updatePatungan: {saveToStorage(patungans: patungans)}, requestDelete: deletePatungan*/)
                             }
@@ -99,15 +84,7 @@ struct ContentView: View {
                 }
                 
             }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
             //.onAppear(perform: loadFromStorage)
-=======
-//            .onAppear(perform: loadFromStorage)
->>>>>>> Stashed changes
-=======
-//            .onAppear(perform: loadFromStorage)
->>>>>>> Stashed changes
         }
         .preferredColorScheme(.dark)
     }
