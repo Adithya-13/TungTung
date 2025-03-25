@@ -5,7 +5,6 @@ struct AddPatunganView: View {
     @Environment(\.modelContext) private var modelContext
     
     @State private var title = ""
-    @State private var price: String = ""
     @State private var amount: Int? = nil
     @State private var members: [Member] = []
     @State private var paymentOptions: [PaymentOption] = []
@@ -21,7 +20,7 @@ struct AddPatunganView: View {
     @State private var memberAmount: Double = 0.0
     
     func isValid() -> Bool {
-        return !title.isEmpty && !price.isEmpty && amount != nil && !members.isEmpty && !paymentOptions.isEmpty
+        return !title.isEmpty && amount != nil && !members.isEmpty && !paymentOptions.isEmpty
     }
     
     
@@ -138,12 +137,23 @@ struct AddPatunganView: View {
                     }
                 }
                 
-                Section(header: Text("Agreement Rule")) {
-                    TextEditor(text: $agreementRule)
-                        .submitLabel(.done)
-                        .background(Color.clear)
-                        .cornerRadius(8)
-                        .padding(.horizontal)
+                Section(header: Text("Aturan Perjanjian")) {
+                    ZStack(alignment: .topLeading) {
+                        if agreementRule.isEmpty {
+                            Text("Contoh: Max tanggal 20 Mei")
+                                .foregroundColor(Color("Placeholder"))
+                                .padding(.vertical, 12)
+                        }
+                        
+                        TextEditor(text: $agreementRule)
+                            .submitLabel(.done)
+                            .background(Color.clear)
+                            .cornerRadius(8)
+                            .padding(.horizontal, -4)
+                            .accentColor(Color("PrimaryColor"))
+                        
+                    }
+                    .frame(minHeight: 150)
                 }
                 
                 Button {
@@ -153,9 +163,9 @@ struct AddPatunganView: View {
                         members: members,
                         paymentOptions: paymentOptions,
                         agreement: agreementRule
-                        )
-//                    patungans.append(newPatungan)
-//                    saveToStorage(patungans: patungans)
+                    )
+                    //                    patungans.append(newPatungan)
+                    //                    saveToStorage(patungans: patungans)
                     modelContext.insert(newPatungan)
                     try? modelContext.save()
                     
@@ -167,7 +177,7 @@ struct AddPatunganView: View {
                         .frame(maxWidth: .infinity)
                         .background(isValid() ? Color("PrimaryColor") : Color.gray)
                         .foregroundStyle(isValid() ? .black : .white)
-                        
+                    
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 16))
                 .listRowBackground(Color.clear)
@@ -243,6 +253,7 @@ struct AddPaymentSheet: View {
             TextField("Account Number", text: $newPaymentAccount)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .accentColor(Color("PrimaryColor"))
+                .keyboardType(.numberPad)
             
             TextField("Bank Name", text: $newPaymentBank)
                 .textFieldStyle(RoundedBorderTextFieldStyle())

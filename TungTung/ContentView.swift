@@ -48,7 +48,7 @@ struct ContentView: View {
                             .resizable()
                             .frame(width: 350, height: 350)
                             .scaledToFit()
-                        Text("Belum ada patungan nih      ")
+                        Text("Belum ada patungan nih")
                             .font(.footnote)
                             .padding(.bottom)
                         

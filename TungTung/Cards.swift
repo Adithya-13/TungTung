@@ -19,18 +19,31 @@ struct Cards: View {
         formatter.usesGroupingSeparator = true
         return formatter.string(from: NSNumber(value: amount)) ?? "0"
     }
+    
 
     var body: some View {
         
         NavigationLink(destination: DetailPatungan(patunganDetails: patunganDetails)) {
             VStack(alignment: .leading) {
                 Text(patunganDetails.title)
-                    .font(.title)
-
-                Text("Sisa \(patunganDetails.members.count - Int(patunganDetails.paidParticipants)) orang")
-                    .font(.footnote)
-                    .foregroundColor(.gray)
-
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                
+                if patunganDetails.paidParticipants == 0 {
+                    Text("Belum ada yang bayar")
+                        .font(.footnote)
+                        .foregroundColor(.gray)
+                } else if Int(patunganDetails.paidParticipants) == patunganDetails.members.count {
+                    Text("Semua sudah bayar")
+                        .font(.footnote)
+                        .foregroundColor(.gray)
+                } else if patunganDetails.paidParticipants > 0 {
+                    Text("\(patunganDetails.members.count - Int(patunganDetails.paidParticipants)) orang belum bayar")
+                        .font(.footnote)
+                        .foregroundColor(.gray)
+                }
+                
+                    
                 VStack(alignment: .leading){
                     HStack {
                         Spacer()
@@ -52,8 +65,9 @@ struct Cards: View {
                     .frame(height: 8)
                     .accentColor(Color("PrimaryColor"))
                     .cornerRadius(5)
-                    .padding(.bottom)
+//                    .padding(.bottom)
             }
         }
+        .padding(.vertical, 4)
     }
 }

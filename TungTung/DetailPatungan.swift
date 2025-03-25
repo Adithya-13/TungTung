@@ -3,10 +3,13 @@ import SwiftUI
 struct DetailPatungan: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.modelContext) private var modelContext
-
+    
     @Bindable var patunganDetails: Patungan
-//    var onUpdate: () -> Void
-//    var deleteThisPatungan: (UUID) -> Void
+    //    var onUpdate: () -> Void
+    //    var deleteThisPatungan: (UUID) -> Void
+    
+    //    var onUpdate: () -> Void
+    //    var deleteThisPatungan: (UUID) -> Void
     
     private var remaining: Double {
         let amount = patunganDetails.amount
@@ -27,48 +30,55 @@ struct DetailPatungan: View {
         }.joined(separator: "\n")
         
         let agreement = patunganDetails.agreement
+        var detailText = """
+           📌 Detail Patungan
+           \(title)
+           
+           💰 Total Dana: \(formatToRupiah(totalAmount))
+           💵 Sisa Kebutuhan: \(formatToRupiah(remaining))
+           
+           👥 Kontribusi Anggota:
+           \(membersText)
+           
+           🏦 Opsi Pembayaran:
+           \(paymentOptionsText)
+           
+           """
         
-        return """
-        📌 Detail Patungan
-        \(title)
+        if !agreement.isEmpty {
+            detailText += """
+               
+               📜 Aturan Perjanjian:
+               \(agreement)
+               """
+        }
         
-        💰 Total Dana: \(formatToRupiah(totalAmount))
-        💵 Sisa Kebutuhan: \(formatToRupiah(remaining))
+        detailText += "\n\nBy TungTung Apps!"
         
-        👥 Kontribusi Anggota:
-        \(membersText)
-        
-        🏦 Opsi Pembayaran:
-        \(paymentOptionsText)
-        
-        📜 Aturan Perjanjian:
-        \(agreement)
-        
-        By TungTung Apps!
-        """
+        return detailText
     }
     
     func formatToRupiah(_ amount: Int) -> String {
         let numberFormatter = NumberFormatter()
-        numberFormatter.locale = Locale(identifier: "id_ID") // Indonesian locale
+        numberFormatter.locale = Locale(identifier: "id_ID")
         numberFormatter.numberStyle = .currency
         numberFormatter.currencySymbol = "Rp"
-        numberFormatter.maximumFractionDigits = 0 // No decimal for Rupiah
+        numberFormatter.maximumFractionDigits = 0
         
         return numberFormatter.string(from: NSNumber(value: amount)) ?? "Rp0"
     }
     
     func formatToRupiah(_ amount: Double) -> String {
         let numberFormatter = NumberFormatter()
-        numberFormatter.locale = Locale(identifier: "id_ID") // Indonesian locale
+        numberFormatter.locale = Locale(identifier: "id_ID")
         numberFormatter.numberStyle = .currency
         numberFormatter.currencySymbol = "Rp"
-        numberFormatter.maximumFractionDigits = 0 // No decimal for Rupiah
+        numberFormatter.maximumFractionDigits = 0
         
         return numberFormatter.string(from: NSNumber(value: amount)) ?? "Rp0"
     }
     
-    @State private var showToast = false
+    @State var showToast = false
     @State var isAlertPresented = false
     
     
@@ -159,38 +169,30 @@ struct DetailPatungan: View {
                         .padding(.vertical)
                     }
                     
-                    Section(header: Text("Aturan Perjanjian").font(.subheadline)) {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(patunganDetails.agreement)
+                    if !patunganDetails.agreement.isEmpty {
+                        Section(header: Text("Aturan Perjanjian").font(.subheadline)) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(patunganDetails.agreement)
+                            }
+                            .font(.subheadline)
                         }
-                        .font(.subheadline)
                     }
                     
-                    Button(action: {
-                        let detailText = generatePatunganDetail()
-                        UIPasteboard.general.string = detailText
-                        //print("Copied to clipboard: \(detailText)")
-                        
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            showToast = true
-                        }
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                showToast = false
+                    Section {
+                        ShareLink(item: generatePatunganDetail()) {
+                            Button(action: { }) {
+                                Text("Bagikan Detail Patungan")
+                                    .fontWeight(.semibold)
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color("PrimaryColor"))
+                                    .foregroundStyle(.black)
+                                    .cornerRadius(12)
                             }
                         }
-                    }) {
-                        Text("Salin Detail Patungan")
-                            .fontWeight(.semibold)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color("PrimaryColor"))
-                            .foregroundStyle(.black)
-                            .cornerRadius(8)
+                        .buttonStyle(PlainButtonStyle())
                     }
                     .listRowBackground(Color.clear)
-                    .listRowInsets(EdgeInsets())
                 }
             }
             
@@ -288,8 +290,6 @@ struct DetailPatungan: View {
         var accountNumber: String
         var owner: String
         
-        @Environment(\.colorScheme) var colorScheme
-        
         var body: some View {
             HStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 4) {
@@ -317,7 +317,7 @@ struct DetailPatungan: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(colorScheme == .dark ? Color.white.opacity(0.2) : Color.black.opacity(0.1), lineWidth: 1)
+                    .stroke(Color.white.opacity(0.2))
             )
         }
     }
