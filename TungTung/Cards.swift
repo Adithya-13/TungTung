@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct Cards: View {
-    @Binding var patunganDetails: Patungan
-    var updatePatungan: () -> Void
-    var requestDelete: (UUID) -> Void
+    @Bindable var patunganDetails: Patungan
+//    var updatePatungan: () -> Void
+//    var requestDelete: (UUID) -> Void
     
     private func formattedAmount(amount: Double) -> String {
         let formatter = NumberFormatter()
@@ -22,7 +22,7 @@ struct Cards: View {
 
     var body: some View {
         
-        NavigationLink(destination: DetailPatungan(patunganDetails: $patunganDetails, onUpdate: updatePatungan, deleteThisPatungan: requestDelete)) {
+        NavigationLink(destination: DetailPatungan(patunganDetails: patunganDetails)) {
             VStack(alignment: .leading) {
                 Text(patunganDetails.title)
                     .font(.title)

@@ -2,9 +2,11 @@ import SwiftUI
 
 struct DetailPatungan: View {
     @Environment(\.presentationMode) var presentationMode
-    @Binding var patunganDetails: Patungan
-    var onUpdate: () -> Void
-    var deleteThisPatungan: (UUID) -> Void
+    @Environment(\.modelContext) private var modelContext
+    
+    @Bindable var patunganDetails: Patungan
+//    var onUpdate: () -> Void
+//    var deleteThisPatungan: (UUID) -> Void
     
     private var remaining: Double {
         let amount = patunganDetails.amount
@@ -124,7 +126,6 @@ struct DetailPatungan: View {
                                 
                                 Button(action: {
                                     member.isPaid.toggle()
-                                    onUpdate()
                                 }) {
                                     Image(systemName: member.isPaid ? "checkmark.square.fill" : "square")
                                         .resizable()
@@ -258,7 +259,7 @@ struct DetailPatungan: View {
         }
         .alert("Delete Patungan?", isPresented: $isAlertPresented, actions: {
             Button("Delete", role: .destructive) {
-                deleteThisPatungan(patunganDetails.id)
+                modelContext.delete(patunganDetails)
                 presentationMode.wrappedValue.dismiss()
             }
         }, message: {

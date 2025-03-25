@@ -6,10 +6,19 @@
 //
 
 import Foundation
+import SwiftData
 
-struct Member: Codable {
+
+@Model
+class Member {
     var memberId: UUID = UUID()
     var name: String
     var amount: Double
-    var isPaid: Bool = false
+    var isPaid: Bool
+    
+    init(name: String, amount: Double, isPaid: Bool){
+        self.name = name
+        self.amount = amount
+        self.isPaid = isPaid
+    }
 }

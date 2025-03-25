@@ -2,7 +2,7 @@ import SwiftUI
 
 struct AddPatunganView: View {
     @Environment(\.dismiss) var dismiss
-    @Binding var patungans: [Patungan]
+    @Environment(\.modelContext) private var modelContext
     
     @State private var title = ""
     @State private var price: String = ""
@@ -91,7 +91,7 @@ struct AddPatunganView: View {
                     .sheet(isPresented: $showAddMemberSheet) {
                         AddMemberSheet(newMemberName: $newMemberName, onSave: {
                             if !newMemberName.isEmpty {
-                                members.append(Member(name: newMemberName, amount: memberAmount))
+                                members.append(Member(name: newMemberName, amount: memberAmount, isPaid: false))
                                 newMemberName = ""
                                 calculateMemberAmount(amount: amount ?? 0, members: &members)
                                 showAddMemberSheet.toggle()
@@ -154,8 +154,8 @@ struct AddPatunganView: View {
                         paymentOptions: paymentOptions,
                         agreement: agreementRule
                         )
-                    patungans.append(newPatungan)
-                    saveToStorage(patungans: patungans)
+                    modelContext.insert(newPatungan)
+                    try? modelContext.save()
                     
                     dismiss()
                 } label: {

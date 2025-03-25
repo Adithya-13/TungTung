@@ -6,17 +6,17 @@
 //
 
 import SwiftUI
+import SwiftData
 import Lottie
 
-func saveToStorage(patungans: [Patungan]) {
-    if let encoded = try? JSONEncoder().encode(patungans) {
-        UserDefaults.standard.set(encoded, forKey: "savedPatungans")
-    }
-}
+//func saveToStorage(patungans: [Patungan]) {
+//    if let encoded = try? JSONEncoder().encode(patungans) {
+//        UserDefaults.standard.set(encoded, forKey: "savedPatungans")
+//    }
+//}
 
 struct ContentView: View {
-    
-    @State private var patungans: [Patungan] = []
+    @Query var patungans: [Patungan] = []
     
     private var animation: String = "frankensteinAnm.json"
     
@@ -26,21 +26,21 @@ struct ContentView: View {
         UserDefaults.standard.removeObject(forKey: "savedPatungans")
     }*/
     
-    private func deletePatungan(id: UUID) {
-        patungans.removeAll { $0.id == id } // Remove by ID
-        saveToStorage(patungans: patungans)
-    }
-    
-    private func loadFromStorage() {
-        if let savedData = UserDefaults.standard.data(forKey: "savedPatungans"),
-            let decoded = try? JSONDecoder().decode([Patungan].self, from: savedData) {
-            patungans = decoded
-        }
-    }
+//    private func deletePatungan(id: UUID) {
+//        patungans.removeAll { $0.id == id } // Remove by ID
+//        saveToStorage(patungans: patungans)
+//    }
+//    
+//    private func loadFromStorage() {
+//        if let savedData = UserDefaults.standard.data(forKey: "savedPatungans"),
+//            let decoded = try? JSONDecoder().decode([Patungan].self, from: savedData) {
+//            patungans = decoded
+//        }
+//    }
     
     var body: some View {
         NavigationStack {
-            AppBar(patungans: $patungans, title: "TungTung!")
+            AppBar(title: "TungTung!")
             VStack {
                 if patungans.isEmpty {
                     VStack {
@@ -53,7 +53,7 @@ struct ContentView: View {
                             .font(.footnote)
                             .padding(.bottom)
                         
-                        NavigationLink(destination: AddPatunganView(patungans: $patungans)){
+                        NavigationLink(destination: AddPatunganView()){
                             Label("Tambahkan Patungan", systemImage: "plus")
                                 .font(.subheadline)
                                 .foregroundStyle(Color.black)
@@ -67,14 +67,14 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     List {
-                        ForEach($patungans, id: \.id) { patunganDetails in
+                        ForEach(patungans) { patunganDetails in
                             Section() {
-                                Cards(patunganDetails: patunganDetails, updatePatungan: {saveToStorage(patungans: patungans)}, requestDelete: deletePatungan)
+                                Cards(patunganDetails: patunganDetails/*, updatePatungan: {saveToStorage(patungans: patungans)}, requestDelete: deletePatungan*/)
                             }
                             .listSectionSpacing(15)
                         }
                     }
-                    NavigationLink(destination: AddPatunganView(patungans: $patungans)){
+                    NavigationLink(destination: AddPatunganView()){
                         Label("Tambahkan Patungan", systemImage: "plus")
                             .font(.headline)
                             .frame(maxWidth: .infinity)
@@ -85,7 +85,7 @@ struct ContentView: View {
                 }
                 
             }
-            .onAppear(perform: loadFromStorage)
+            //.onAppear(perform: loadFromStorage)
         }
         .preferredColorScheme(.dark)
     }

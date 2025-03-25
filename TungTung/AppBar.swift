@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct AppBar: View{
-    @Binding var patungans : [Patungan]
     var title: String
     
     var body: some View{
@@ -18,7 +17,7 @@ struct AppBar: View{
                 .padding(.leading)
                 .foregroundStyle(Color("PrimaryColor"))
             Spacer()
-            NavigationLink(destination: AddPatunganView(patungans: $patungans)){
+            NavigationLink(destination: AddPatunganView()){
                 Image(systemName: "plus")
                     .padding(.trailing, 20)
                     .foregroundStyle(Color("PrimaryColor"))

@@ -6,10 +6,18 @@
 //
 
 import Foundation
+import SwiftData
 
-struct PaymentOption: Codable {
+@Model
+class PaymentOption{
     var paymentOptionId: UUID = UUID()
     var accountNumber: String
     var bankName: String
     var owner: String
+    
+    init(accountNumber: String, bankName: String, owner: String){
+        self.accountNumber = accountNumber
+        self.bankName = bankName
+        self.owner = owner
+    }
 }

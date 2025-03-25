@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct TungTungApp: App {
@@ -13,5 +14,6 @@ struct TungTungApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: [Patungan.self, Member.self, PaymentOption.self])
     }
 }
