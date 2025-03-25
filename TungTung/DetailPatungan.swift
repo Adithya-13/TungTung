@@ -17,7 +17,7 @@ struct DetailPatungan: View {
         let totalAmount = patunganDetails.amount
         
         let membersText = patunganDetails.members.map { member in
-            "- \(member.name): Rp\(String(format: "%.2f", member.amount)) \(member.isPaid ? "(Lunas ✅)" : "(Belum Lunas ❌)")"
+            "- \(member.name): \(formatToRupiah(member.amount)) \(member.isPaid ? "(Lunas ✅)" : "(Belum Lunas ❌)")"
         }.joined(separator: "\n")
         
         let paymentOptionsText = patunganDetails.paymentOptions.map { option in
@@ -27,21 +27,43 @@ struct DetailPatungan: View {
         let agreement = patunganDetails.agreement
         
         return """
-        📌 **Detail Patungan**
+        📌 Detail Patungan
         \(title)
         
-        💰 **Total Dana:** Rp\(totalAmount)
-        💵 **Sisa Kebutuhan:** Rp\(String(format: "%.2f", remaining))
+        💰 Total Dana: \(formatToRupiah(totalAmount))
+        💵 Sisa Kebutuhan: \(formatToRupiah(remaining))
         
-        👥 **Kontribusi Anggota:**
+        👥 Kontribusi Anggota:
         \(membersText)
         
-        🏦 **Opsi Pembayaran:**
+        🏦 Opsi Pembayaran:
         \(paymentOptionsText)
         
-        📜 **Aturan Perjanjian:**
+        📜 Aturan Perjanjian:
         \(agreement)
+        
+        By TungTung Apps!
         """
+    }
+    
+    func formatToRupiah(_ amount: Int) -> String {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.locale = Locale(identifier: "id_ID") // Indonesian locale
+        numberFormatter.numberStyle = .currency
+        numberFormatter.currencySymbol = "Rp"
+        numberFormatter.maximumFractionDigits = 0 // No decimal for Rupiah
+        
+        return numberFormatter.string(from: NSNumber(value: amount)) ?? "Rp0"
+    }
+    
+    func formatToRupiah(_ amount: Double) -> String {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.locale = Locale(identifier: "id_ID") // Indonesian locale
+        numberFormatter.numberStyle = .currency
+        numberFormatter.currencySymbol = "Rp"
+        numberFormatter.maximumFractionDigits = 0 // No decimal for Rupiah
+        
+        return numberFormatter.string(from: NSNumber(value: amount)) ?? "Rp0"
     }
     
     @State private var showToast = false
