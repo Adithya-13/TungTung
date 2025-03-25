@@ -8,10 +8,6 @@ struct DetailPatungan: View {
 //    var onUpdate: () -> Void
 //    var deleteThisPatungan: (UUID) -> Void
     
-    @Bindable var patunganDetails: Patungan
-//    var onUpdate: () -> Void
-//    var deleteThisPatungan: (UUID) -> Void
-    
     private var remaining: Double {
         let amount = patunganDetails.amount
         let accumulatedAmount = patunganDetails.accumulatedAmount
