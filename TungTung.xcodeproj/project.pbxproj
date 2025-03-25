@@ -263,7 +263,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TungTung/Preview Content\"";
 <<<<<<< Updated upstream:TungTung.xcodeproj/project.pbxproj
+<<<<<<< Updated upstream:TungTung.xcodeproj/project.pbxproj
 				DEVELOPMENT_TEAM = 32T8HNVYGX;
+=======
+				DEVELOPMENT_TEAM = DNY65J2HJ2;
+>>>>>>> Stashed changes:TungTung!.xcodeproj/project.pbxproj
 =======
 				DEVELOPMENT_TEAM = DNY65J2HJ2;
 >>>>>>> Stashed changes:TungTung!.xcodeproj/project.pbxproj
@@ -280,7 +284,11 @@
 				);
 				MARKETING_VERSION = 1.0;
 <<<<<<< Updated upstream:TungTung.xcodeproj/project.pbxproj
+<<<<<<< Updated upstream:TungTung.xcodeproj/project.pbxproj
 				PRODUCT_BUNDLE_IDENTIFIER = com.adail;
+=======
+				PRODUCT_BUNDLE_IDENTIFIER = ADA.TungTung;
+>>>>>>> Stashed changes:TungTung!.xcodeproj/project.pbxproj
 =======
 				PRODUCT_BUNDLE_IDENTIFIER = ADA.TungTung;
 >>>>>>> Stashed changes:TungTung!.xcodeproj/project.pbxproj
@@ -302,7 +310,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TungTung/Preview Content\"";
 <<<<<<< Updated upstream:TungTung.xcodeproj/project.pbxproj
+<<<<<<< Updated upstream:TungTung.xcodeproj/project.pbxproj
 				DEVELOPMENT_TEAM = 32T8HNVYGX;
+=======
+				DEVELOPMENT_TEAM = DNY65J2HJ2;
+>>>>>>> Stashed changes:TungTung!.xcodeproj/project.pbxproj
 =======
 				DEVELOPMENT_TEAM = DNY65J2HJ2;
 >>>>>>> Stashed changes:TungTung!.xcodeproj/project.pbxproj
@@ -319,7 +331,11 @@
 				);
 				MARKETING_VERSION = 1.0;
 <<<<<<< Updated upstream:TungTung.xcodeproj/project.pbxproj
+<<<<<<< Updated upstream:TungTung.xcodeproj/project.pbxproj
 				PRODUCT_BUNDLE_IDENTIFIER = ada.il.tungtung;
+=======
+				PRODUCT_BUNDLE_IDENTIFIER = ADA.TungTung;
+>>>>>>> Stashed changes:TungTung!.xcodeproj/project.pbxproj
 =======
 				PRODUCT_BUNDLE_IDENTIFIER = ADA.TungTung;
 >>>>>>> Stashed changes:TungTung!.xcodeproj/project.pbxproj

@@ -4,6 +4,12 @@ struct DetailPatungan: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.modelContext) private var modelContext
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+    @Bindable var patunganDetails: Patungan
+//    var onUpdate: () -> Void
+//    var deleteThisPatungan: (UUID) -> Void
+>>>>>>> Stashed changes
 =======
     @Bindable var patunganDetails: Patungan
 //    var onUpdate: () -> Void
@@ -272,6 +278,9 @@ struct DetailPatungan: View {
                 isAlertPresented = false
             }
             Button("Hapus", role: .destructive) {
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                 modelContext.delete(patunganDetails)
                 presentationMode.wrappedValue.dismiss()

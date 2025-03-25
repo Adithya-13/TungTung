@@ -155,6 +155,11 @@ struct AddPatunganView: View {
                         agreement: agreementRule
                         )
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+//                    patungans.append(newPatungan)
+//                    saveToStorage(patungans: patungans)
+>>>>>>> Stashed changes
 =======
 //                    patungans.append(newPatungan)
 //                    saveToStorage(patungans: patungans)

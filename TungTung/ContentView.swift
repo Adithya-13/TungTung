@@ -21,6 +21,9 @@ struct ContentView: View {
 =======
     
     @Query var patungans: [Patungan]
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     
     private var animation: String = "frankensteinAnm.json"
@@ -71,7 +74,11 @@ struct ContentView: View {
                 } else {
                     List {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                         ForEach(patungans) { patunganDetails in
+=======
+                        ForEach(patungans, id: \.id) { patunganDetails in
+>>>>>>> Stashed changes
 =======
                         ForEach(patungans, id: \.id) { patunganDetails in
 >>>>>>> Stashed changes
@@ -93,7 +100,11 @@ struct ContentView: View {
                 
             }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             //.onAppear(perform: loadFromStorage)
+=======
+//            .onAppear(perform: loadFromStorage)
+>>>>>>> Stashed changes
 =======
 //            .onAppear(perform: loadFromStorage)
 >>>>>>> Stashed changes
