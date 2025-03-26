@@ -22,7 +22,7 @@ struct AddPatunganView: View {
     @State private var showErrorMessage = false
     
     func isValid() -> Bool {
-        return !title.isEmpty && amount != 0 && !members.isEmpty && !paymentOptions.isEmpty
+        return !title.isEmpty && amount != 0 && !members.isEmpty && members.count > 1 && !paymentOptions.isEmpty
     }
     
     private func calculateMemberAmount(amount: Int, members: inout [Member]) {
@@ -157,19 +157,23 @@ struct AddPatunganView: View {
                 }
                 
                 Button {
-                    let newPatungan = Patungan(
-                        title: title,
-                        amount: amount ?? 0,
-                        members: members,
-                        paymentOptions: paymentOptions,
-                        agreement: agreementRule
-                    )
-                    //                    patungans.append(newPatungan)
-                    //                    saveToStorage(patungans: patungans)
-                    modelContext.insert(newPatungan)
-                    try? modelContext.save()
-                    
-                    dismiss()
+                    if isValid() {
+                        let newPatungan = Patungan(
+                            title: title,
+                            amount: amount ?? 0,
+                            members: members,
+                            paymentOptions: paymentOptions,
+                            agreement: agreementRule
+                        )
+                        //                    patungans.append(newPatungan)
+                        //                    saveToStorage(patungans: patungans)
+                        modelContext.insert(newPatungan)
+                        try? modelContext.save()
+                        dismiss()
+                    }
+                    else{
+                        showErrorMessage.toggle()
+                    }
                 } label: {
                     Text("Simpan")
                         .fontWeight(.semibold)
@@ -181,15 +185,13 @@ struct AddPatunganView: View {
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 16))
                 .listRowBackground(Color.clear)
-                .disabled(!isValid())
-                .onTapGesture {
-                    if !isValid() {
+                .alert("Error", isPresented: $showErrorMessage, actions: {
+                    Button("Ok", role: .cancel) {
                         showErrorMessage.toggle()
                     }
-                }
-                .alert(isPresented: $showErrorMessage) {
-                    Alert(title: Text("Error"), message: Text("Lengkapi semua form!"), dismissButton: .default(Text("OK")))
-                }
+                }, message: {
+                    Text("Lengkapi data, semua form harus diisi")
+                })
                 
                 
             }

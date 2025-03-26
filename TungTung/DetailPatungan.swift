@@ -179,21 +179,6 @@ struct DetailPatungan: View {
                         }
                     }
                     
-                    Section {
-                        ShareLink(item: generatePatunganDetail()) {
-                            Button(action: { }) {
-                                Text("Bagikan Detail Patungan")
-                                    .fontWeight(.semibold)
-                                    .padding()
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color("PrimaryColor"))
-                                    .foregroundStyle(.black)
-                                    .cornerRadius(12)
-                            }
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                    }
-                    .listRowBackground(Color.clear)
                 }
             }
             
