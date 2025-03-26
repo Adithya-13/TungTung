@@ -36,12 +36,15 @@ struct ContentView: View {
 //            patungans = decoded
 //        }
 //    }
+    private var isEmpty: Bool{
+        patungans.isEmpty
+    }
     
     var body: some View {
         NavigationStack {
-            AppBar(title: "TungTung!")
+            AppBar(isEmpty: isEmpty, title: "TungTung!")
             VStack {
-                if patungans.isEmpty {
+                if isEmpty {
                     VStack {
                         LottieView(animation: .named(animation))
                             .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
@@ -72,14 +75,6 @@ struct ContentView: View {
                             }
                             .listSectionSpacing(15)
                         }
-                    }
-                    NavigationLink(destination: AddPatunganView()){
-                        Label("Tambahkan Patungan", systemImage: "plus")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding(.top)
-                            .foregroundStyle(Color.black)
-                            .background(Color("PrimaryColor"))
                     }
                 }
                 

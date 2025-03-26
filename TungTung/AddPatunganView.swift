@@ -19,10 +19,11 @@ struct AddPatunganView: View {
     @State private var showAddPaymentSheet = false
     @State private var memberAmount: Double = 0.0
     
-    func isValid() -> Bool {
-        return !title.isEmpty && amount != nil && !members.isEmpty && !paymentOptions.isEmpty
-    }
+    @State private var showErrorMessage = false
     
+    func isValid() -> Bool {
+        return !title.isEmpty && amount != 0 && !members.isEmpty && !paymentOptions.isEmpty
+    }
     
     private func calculateMemberAmount(amount: Int, members: inout [Member]) {
         guard amount > 0 else {
@@ -57,7 +58,6 @@ struct AddPatunganView: View {
                         .submitLabel(.next)
                         .background(Color.clear)
                         .accentColor(Color("PrimaryColor"))
-                    
                 }
                 
                 Section(header: Text("Jumlah Harga")) {
@@ -182,6 +182,14 @@ struct AddPatunganView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 16))
                 .listRowBackground(Color.clear)
                 .disabled(!isValid())
+                .onTapGesture {
+                    if !isValid() {
+                        showErrorMessage.toggle()
+                    }
+                }
+                .alert(isPresented: $showErrorMessage) {
+                    Alert(title: Text("Error"), message: Text("Lengkapi semua form!"), dismissButton: .default(Text("OK")))
+                }
                 
                 
             }
@@ -211,22 +219,22 @@ struct AddMemberSheet: View {
     
     var body: some View {
         VStack {
-            Text("New Member")
+            Text("Member baru")
                 .font(.headline)
                 .padding()
             
-            TextField("Enter member name", text: $newMemberName)
+            TextField("Masukkan nama anggota", text: $newMemberName)
                 .padding()
                 .accentColor(Color("PrimaryColor"))
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             
             HStack {
-                Button("Cancel") {
+                Button("Batal") {
                     onCancel()
                 }
                 .foregroundColor(Color("PrimaryColor"))
                 Spacer()
-                Button("Save") {
+                Button("Simpan") {
                     onSave()
                 }
                 .foregroundColor(Color("PrimaryColor"))
@@ -246,30 +254,30 @@ struct AddPaymentSheet: View {
     
     var body: some View {
         VStack {
-            Text("New Payment Option")
+            Text("Opsi Pembayaran Baru")
                 .font(.headline)
                 .padding()
             
-            TextField("Account Number", text: $newPaymentAccount)
+            TextField("Nomor Rekening", text: $newPaymentAccount)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .accentColor(Color("PrimaryColor"))
                 .keyboardType(.numberPad)
             
-            TextField("Bank Name", text: $newPaymentBank)
+            TextField("Nama Bank/E-Wallet", text: $newPaymentBank)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .accentColor(Color("PrimaryColor"))
             
-            TextField("Owner", text: $newPaymentOwner)
+            TextField("Pemilik Rekening", text: $newPaymentOwner)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .accentColor(Color("PrimaryColor"))
             
             HStack {
-                Button("Cancel") {
+                Button("Batal") {
                     onCancel()
                 }
                 .foregroundColor(Color("PrimaryColor"))
                 Spacer()
-                Button("Save") {
+                Button("Simpan") {
                     onSave()
                 }
                 .foregroundColor(Color("PrimaryColor"))

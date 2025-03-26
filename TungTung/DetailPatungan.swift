@@ -136,6 +136,7 @@ struct DetailPatungan: View {
                                 
                                 Button(action: {
                                     member.isPaid.toggle()
+                                    try? modelContext.save()
                                 }) {
                                     Image(systemName: member.isPaid ? "checkmark.square.fill" : "square")
                                         .resizable()

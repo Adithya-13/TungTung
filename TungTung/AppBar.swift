@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AppBar: View{
+    let isEmpty: Bool
     var title: String
     
     var body: some View{
@@ -17,11 +18,13 @@ struct AppBar: View{
                 .padding(.leading)
                 .foregroundStyle(Color("PrimaryColor"))
             Spacer()
-            NavigationLink(destination: AddPatunganView()){
-                Image(systemName: "plus")
-                    .padding(.trailing, 20)
-                    .foregroundStyle(Color("PrimaryColor"))
-                    .font(.title)
+            if !isEmpty{
+                NavigationLink(destination: AddPatunganView()){
+                    Image(systemName: "plus")
+                        .padding(.trailing, 20)
+                        .foregroundStyle(Color("PrimaryColor"))
+                        .font(.title)
+                }
             }
         }
         .padding(.bottom)
