@@ -30,13 +30,6 @@ The challenges we've experienced while building TungTung:
 3. **Research and Refining Features**:
    We constantly worked on refining the features based on user feedback, ensuring TungTung is the most practical solution for managing group expenses.
 
-
-## Demo
-
-|TungTung|
-|--|
-|![](/vid.gif?raw=true)|
-
 ## Installation
 
 Clone or Download and Open it into Xcode or any Swift-compatible IDE.
